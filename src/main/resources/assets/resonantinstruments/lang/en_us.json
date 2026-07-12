@@ -1,0 +1,13 @@
+{
+  "itemGroup.resonantinstruments": "Example Mod Tab",
+  "block.resonantinstruments.example_block": "Example Block",
+  "item.resonantinstruments.example_item": "Example Item",
+
+  "resonantinstruments.configuration.title": "Resonant Instruments Configs",
+  "resonantinstruments.configuration.section.resonantinstruments.common.toml": "Resonant Instruments Configs",
+  "resonantinstruments.configuration.section.resonantinstruments.common.toml.title": "Resonant Instruments Configs",
+  "resonantinstruments.configuration.items": "Item List",
+  "resonantinstruments.configuration.logDirtBlock": "Log Dirt Block",
+  "resonantinstruments.configuration.magicNumberIntroduction": "Magic Number Text",
+  "resonantinstruments.configuration.magicNumber": "Magic Number"
+}
