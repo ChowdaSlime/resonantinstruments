@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": "minecraft:iron_block",
+    "B": "minecraft:iron_ingot",
+    "C": "minecraft:stick"
+  },
+  "pattern": [
+    " A ",
+    "B A",
+    "CB "
+  ],
+  "result": {
+    "id": "resonantinstruments:unattuned_fork"
+  }
+}
