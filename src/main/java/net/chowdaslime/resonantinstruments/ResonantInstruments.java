@@ -2,7 +2,7 @@ package net.chowdaslime.resonantinstruments;
 
 import net.chowdaslime.resonantinstruments.block.ModBlocks;
 import net.chowdaslime.resonantinstruments.block.entity.ModBlockEntities;
-import net.chowdaslime.resonantinstruments.data.component.ModDataComponents;
+import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.item.ModEntities;
 import net.chowdaslime.resonantinstruments.item.ModItems;
 import net.neoforged.fml.config.ModConfig;

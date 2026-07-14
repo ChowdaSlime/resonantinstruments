@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "resonantinstruments:block/harmonic_node",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "resonantinstruments:block/harmonic_node"
+    },
+    "facing=south": {
+      "model": "resonantinstruments:block/harmonic_node",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "resonantinstruments:block/harmonic_node",
+      "y": 270
+    }
+  }
+}

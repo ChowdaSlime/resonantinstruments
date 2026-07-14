@@ -42,5 +42,19 @@ public class ModModelProvider extends ModelProvider {
         );
 
         blockModels.registerSimpleItemModel(chamber.asItem(), chamberModelLoc);
+
+        Block node = ModBlocks.HARMONIC_NODE.get();
+        var nodeModelLoc = ModelLocationUtils.getModelLocation(node);
+
+        blockModels.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(node, BlockModelGenerators.plainVariant(nodeModelLoc))
+                        .with(PropertyDispatch.modify(BlockStateProperties.HORIZONTAL_FACING)
+                                .select(Direction.NORTH, v -> v)
+                                .select(Direction.EAST,  BlockModelGenerators.Y_ROT_90)
+                                .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180)
+                                .select(Direction.WEST,  BlockModelGenerators.Y_ROT_270))
+        );
+
+        blockModels.registerSimpleItemModel(node.asItem(), nodeModelLoc);
     }
 }

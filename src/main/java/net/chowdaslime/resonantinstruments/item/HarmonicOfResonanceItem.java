@@ -1,6 +1,6 @@
 package net.chowdaslime.resonantinstruments.item;
 
-import net.chowdaslime.resonantinstruments.data.component.ModDataComponents;
+import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.item.resonance.HoningTier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;

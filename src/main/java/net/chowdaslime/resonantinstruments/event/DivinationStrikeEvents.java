@@ -1,7 +1,7 @@
 package net.chowdaslime.resonantinstruments.event;
 
 import net.chowdaslime.resonantinstruments.ResonantInstrumentsConfig;
-import net.chowdaslime.resonantinstruments.data.component.ModDataComponents;
+import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfDivinationItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

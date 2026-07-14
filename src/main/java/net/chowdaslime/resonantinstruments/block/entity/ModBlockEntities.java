@@ -19,6 +19,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("resonance_chamber_block_entity", () ->
                     new BlockEntityType<>(ResonanceChamberBlockEntity::new, Set.of(ModBlocks.RESONANCE_CHAMBER.get()))
             );
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HarmonicNodeBlockEntity>> HARMONIC_NODE_BLOCK_ENTITY =
+            BLOCK_ENTITIES.register("harmonic_node_block_entity", () ->
+                    new BlockEntityType<>(HarmonicNodeBlockEntity::new, Set.of(ModBlocks.HARMONIC_NODE.get()))
+            );
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);

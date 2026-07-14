@@ -1,8 +1,11 @@
 package net.chowdaslime.resonantinstruments.event;
 
 import net.chowdaslime.resonantinstruments.ResonantInstruments;
+import net.chowdaslime.resonantinstruments.block.entity.ModBlockEntities;
 import net.chowdaslime.resonantinstruments.client.ChronosAcceleratorRenderer;
 import net.chowdaslime.resonantinstruments.client.DivinationTooltip;
+import net.chowdaslime.resonantinstruments.client.HarmonicNodeRenderer;
+import net.chowdaslime.resonantinstruments.client.ResonanceChamberRenderer;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfDivinationItem;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfResonanceItem;
 import net.chowdaslime.resonantinstruments.client.ResonanceTooltip;
@@ -33,5 +36,7 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void registerBER(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.CHRONOS_ACCELERATOR.get(), ChronosAcceleratorRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.HARMONIC_NODE_BLOCK_ENTITY.get(), HarmonicNodeRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.RESONANCE_CHAMBER_BLOCK_ENTITY.get(), ResonanceChamberRenderer::new);
     }
 }

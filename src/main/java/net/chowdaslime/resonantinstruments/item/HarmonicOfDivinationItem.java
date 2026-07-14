@@ -1,6 +1,6 @@
 package net.chowdaslime.resonantinstruments.item;
 
-import net.chowdaslime.resonantinstruments.data.component.ModDataComponents;
+import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;

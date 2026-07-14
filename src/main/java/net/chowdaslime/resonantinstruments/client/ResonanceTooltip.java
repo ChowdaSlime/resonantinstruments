@@ -1,6 +1,6 @@
 package net.chowdaslime.resonantinstruments.client;
 
-import net.chowdaslime.resonantinstruments.data.component.ModDataComponents;
+import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.item.resonance.HoningTier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

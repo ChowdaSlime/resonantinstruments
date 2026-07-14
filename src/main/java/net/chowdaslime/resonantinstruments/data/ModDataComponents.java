@@ -1,4 +1,4 @@
-package net.chowdaslime.resonantinstruments.data.component;
+package net.chowdaslime.resonantinstruments.data;
 
 import com.mojang.serialization.Codec;
 import net.chowdaslime.resonantinstruments.ResonantInstruments;
@@ -23,6 +23,12 @@ public class ModDataComponents {
             DATA_COMPONENTS.register("tuned_block_id", () -> DataComponentType.<String>builder()
                     .persistent(Codec.STRING)
                     .networkSynchronized(ByteBufCodecs.STRING_UTF8)
+                    .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<StoredPotionsData>> STORED_POTIONS =
+            DATA_COMPONENTS.register("stored_potions", () -> DataComponentType.<StoredPotionsData>builder()
+                    .persistent(StoredPotionsData.CODEC)
+                    .networkSynchronized(StoredPotionsData.STREAM_CODEC)
                     .build());
 
     public static void register(IEventBus modEventBus) {

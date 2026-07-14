@@ -21,6 +21,11 @@ public class ModBlocks {
             properties -> new ResonanceChamberBlock(properties.strength(3.0F, 3.0F).requiresCorrectToolForDrops().noOcclusion())
     );
 
+    public static final DeferredBlock<Block> HARMONIC_NODE = registerBlock(
+            "harmonic_node",
+            properties -> new HarmonicNodeBlock(properties.strength(3.0F, 3.0F).requiresCorrectToolForDrops().noOcclusion())
+    );
+
     private static <T extends Block> DeferredBlock<T> registerBlock(
             String name, Function<BlockBehaviour.Properties, T> function) {
         DeferredBlock<T> toReturn = BLOCKS.registerBlock(name, function);

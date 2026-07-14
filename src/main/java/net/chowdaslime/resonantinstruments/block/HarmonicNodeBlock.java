@@ -1,4 +1,83 @@
 package net.chowdaslime.resonantinstruments.block;
 
-public class HarmonicNodeBlock {
+import net.chowdaslime.resonantinstruments.block.entity.HarmonicNodeBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+public class HarmonicNodeBlock extends Block {
+
+    public static final EnumProperty<Direction> FACING =
+            BlockStateProperties.HORIZONTAL_FACING;
+
+    private static final VoxelShape SHAPE = Block.box(4.5, 0.0, 4.5, 11.5, 9.75, 11.5);
+
+    public HarmonicNodeBlock(BlockBehaviour.Properties properties) {
+        super(properties);
+        this.registerDefaultState(
+                this.stateDefinition.any().setValue(FACING, Direction.NORTH)
+        );
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState()
+                .setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos,
+                                          Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
+
+        if (!(level.getBlockEntity(pos) instanceof HarmonicNodeBlockEntity node)) {
+            return InteractionResult.PASS;
+        }
+
+        ItemStack handStack = player.getItemInHand(hand);
+        ItemStack returned = node.interact(handStack);
+
+        if (returned == null) {
+            return InteractionResult.PASS;
+        }
+
+        if (!returned.isEmpty()) {
+            if (!player.getInventory().add(returned)) {
+                player.drop(returned, false);
+            }
+        }
+
+        if (!handStack.isEmpty() && !player.getAbilities().instabuild) {
+            handStack.shrink(1);
+        }
+
+        return InteractionResult.CONSUME;
+    }
 }
