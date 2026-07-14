@@ -1,5 +1,7 @@
 package net.chowdaslime.resonantinstruments;
 
+import net.chowdaslime.resonantinstruments.block.ModBlocks;
+import net.chowdaslime.resonantinstruments.block.entity.ModBlockEntities;
 import net.chowdaslime.resonantinstruments.data.component.ModDataComponents;
 import net.chowdaslime.resonantinstruments.item.ModEntities;
 import net.chowdaslime.resonantinstruments.item.ModItems;
@@ -27,6 +29,8 @@ public class ResonantInstruments {
 
 
         ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
         ModDataComponents.register(modEventBus);
         ModEntities.register(modEventBus);

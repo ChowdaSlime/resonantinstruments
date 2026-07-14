@@ -16,7 +16,7 @@ public class ModItems {
             );
     public static final DeferredHolder<Item, HarmonicOfVitalityItem> HARMONIC_OF_VITALITY =
             ITEMS.registerItem("harmonic_of_vitality",
-                    HarmonicOfVitalityItem::new
+                    properties -> new HarmonicOfVitalityItem(properties.stacksTo(1))
             );
     public static final DeferredHolder<Item, HarmonicOfResonanceItem> HARMONIC_OF_RESONANCE =
             ITEMS.registerItem("harmonic_of_resonance",
@@ -24,15 +24,15 @@ public class ModItems {
             );
     public static final DeferredHolder<Item, HarmonicOfChronosItem> HARMONIC_OF_CHRONOS =
             ITEMS.registerItem("harmonic_of_chronos",
-                    HarmonicOfChronosItem::new
+                    properties -> new HarmonicOfChronosItem(properties.stacksTo(1))
             );
     public static final DeferredHolder<Item, HarmonicOfDivinationItem> HARMONIC_OF_DIVINATION =
             ITEMS.registerItem("harmonic_of_divination",
-                    HarmonicOfDivinationItem::new
+                    properties -> new HarmonicOfDivinationItem(properties.stacksTo(1))
             );
     public static final DeferredHolder<Item, HarmonicOfAlchemyItem> HARMONIC_OF_ALCHEMY =
             ITEMS.registerItem("harmonic_of_alchemy",
-                    HarmonicOfAlchemyItem::new
+                    properties -> new HarmonicOfAlchemyItem(properties.stacksTo(1))
             );
 
 

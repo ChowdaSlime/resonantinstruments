@@ -23,6 +23,7 @@ public class ResonantInstrumentsConfig {
 
     // Harmonic of Divination
     public static final ModConfigSpec.IntValue DIVINATION_COOLDOWN_TICKS;
+    public static final ModConfigSpec.IntValue DIVINATION_SEARCH_RADIUS;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -64,6 +65,9 @@ public class ResonantInstrumentsConfig {
         builder.pop();
 
         builder.push("divination");
+        DIVINATION_SEARCH_RADIUS = builder
+                .comment("Radius (in blocks) the Harmonic of Divination will search for the tuned block")
+                .defineInRange("searchRadius", 48, 4, 256);
         DIVINATION_COOLDOWN_TICKS = builder
                 .comment("Cooldown in ticks between Divination uses (20 ticks = 1 second)")
                 .defineInRange("cooldownTicks", 600, 0, Integer.MAX_VALUE);

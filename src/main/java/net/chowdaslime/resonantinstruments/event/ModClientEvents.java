@@ -2,6 +2,8 @@ package net.chowdaslime.resonantinstruments.event;
 
 import net.chowdaslime.resonantinstruments.ResonantInstruments;
 import net.chowdaslime.resonantinstruments.client.ChronosAcceleratorRenderer;
+import net.chowdaslime.resonantinstruments.client.DivinationTooltip;
+import net.chowdaslime.resonantinstruments.item.HarmonicOfDivinationItem;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfResonanceItem;
 import net.chowdaslime.resonantinstruments.client.ResonanceTooltip;
 import net.chowdaslime.resonantinstruments.item.ModEntities;
@@ -21,6 +23,10 @@ public class ModClientEvents {
 
         if (item instanceof HarmonicOfResonanceItem) {
             ResonanceTooltip.addDynamicTooltip(event.getItemStack(), event.getToolTip());
+        }
+
+        if (item instanceof HarmonicOfDivinationItem) {
+            DivinationTooltip.addDynamicTooltip(event.getItemStack(), event.getToolTip());
         }
     }
 

@@ -1,5 +1,6 @@
 package net.chowdaslime.resonantinstruments;
 
+import net.chowdaslime.resonantinstruments.block.ModBlocks;
 import net.chowdaslime.resonantinstruments.item.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -24,6 +25,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.HARMONIC_OF_CHRONOS.get());
                         output.accept(ModItems.HARMONIC_OF_ALCHEMY.get());
                         output.accept(ModItems.HARMONIC_OF_DIVINATION.get());
+                        output.accept(ModBlocks.RESONANCE_CHAMBER.get());
                     })
                     .build());
 
