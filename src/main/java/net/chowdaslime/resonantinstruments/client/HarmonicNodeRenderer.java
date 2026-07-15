@@ -74,7 +74,7 @@ public class HarmonicNodeRenderer implements BlockEntityRenderer<HarmonicNodeBlo
             float rotationDegrees = (time * 2.0f) % 360f;
             poseStack.mulPose(Axis.YP.rotationDegrees(rotationDegrees));
 
-            float scale = 0.5f;
+            float scale = 0.35f;
             poseStack.scale(scale, scale, scale);
 
             AABB box = state.itemState.getModelBoundingBox();

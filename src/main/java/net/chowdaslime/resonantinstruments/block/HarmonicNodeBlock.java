@@ -3,6 +3,7 @@ package net.chowdaslime.resonantinstruments.block;
 import net.chowdaslime.resonantinstruments.block.entity.HarmonicNodeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -11,6 +12,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -20,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class HarmonicNodeBlock extends Block {
+public class HarmonicNodeBlock extends Block implements EntityBlock {
 
     public static final EnumProperty<Direction> FACING =
             BlockStateProperties.HORIZONTAL_FACING;
@@ -32,6 +35,11 @@ public class HarmonicNodeBlock extends Block {
         this.registerDefaultState(
                 this.stateDefinition.any().setValue(FACING, Direction.NORTH)
         );
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new HarmonicNodeBlockEntity(pos, state);
     }
 
     @Override
@@ -62,22 +70,25 @@ public class HarmonicNodeBlock extends Block {
         }
 
         ItemStack handStack = player.getItemInHand(hand);
-        ItemStack returned = node.interact(handStack);
 
-        if (returned == null) {
+        if (node.hasPotion()) {
+            ItemStack old = node.extractPotion();
+            if (!old.isEmpty()) {
+                if (!player.getInventory().add(old)) {
+                    player.drop(old, false);
+                }
+            }
+            return InteractionResult.CONSUME;
+        }
+
+        if (handStack.isEmpty() || !handStack.has(DataComponents.POTION_CONTENTS)) {
             return InteractionResult.PASS;
         }
 
-        if (!returned.isEmpty()) {
-            if (!player.getInventory().add(returned)) {
-                player.drop(returned, false);
-            }
-        }
-
-        if (!handStack.isEmpty() && !player.getAbilities().instabuild) {
+        boolean inserted = node.tryInsertPotion(handStack);
+        if (inserted && !player.getAbilities().instabuild) {
             handStack.shrink(1);
         }
-
-        return InteractionResult.CONSUME;
+        return inserted ? InteractionResult.CONSUME : InteractionResult.PASS;
     }
 }

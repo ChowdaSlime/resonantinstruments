@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -25,6 +26,17 @@ import java.util.List;
 public class ResonanceChamberBlockEntity extends BlockEntity {
 
     private ItemStack storedItem = ItemStack.EMPTY;
+
+    private static final int RITUAL_DURATION = 200;
+    private static final int HOLD_DURATION = 20;
+    private static final int DESCEND_DURATION = 30;
+
+    public enum Phase { IDLE, RITUAL, HOLD, DESCEND }
+
+    private Phase phase = Phase.IDLE;
+    private long phaseStartTime = 0L;
+
+    private List<PotionContents> pendingPotions = null;
 
     private static final BlockPos[] NODE_OFFSETS = new BlockPos[]{
             new BlockPos(3, 0, 0),
@@ -101,6 +113,7 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
 
     public boolean tryStartRitual() {
         if (level == null || level.isClientSide()) return false;
+        if (phase != Phase.IDLE) return false;
         if (!hasItem()) return false;
         if (!storedItem.is(ModItems.UNATTUNED_FORK.get())) return false;
 
@@ -119,6 +132,48 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
 
         if (potions.isEmpty()) return false;
 
+        this.pendingPotions = potions;
+        setPhase(Phase.RITUAL);
+
+        return true;
+    }
+
+    private void setPhase(Phase newPhase) {
+        this.phase = newPhase;
+        this.phaseStartTime = level != null ? level.getGameTime() : 0L;
+        setChanged();
+        syncToClient();
+    }
+
+    public static void serverTick(Level level, BlockPos pos, BlockState state, ResonanceChamberBlockEntity be) {
+        if (be.phase == Phase.IDLE) return;
+
+        long elapsed = level.getGameTime() - be.phaseStartTime;
+
+        switch (be.phase) {
+            case RITUAL -> {
+                if (elapsed >= RITUAL_DURATION) {
+                    be.completeRitual();
+                }
+            }
+            case HOLD -> {
+                if (elapsed >= HOLD_DURATION) {
+                    be.setPhase(Phase.DESCEND);
+                }
+            }
+            case DESCEND -> {
+                if (elapsed >= DESCEND_DURATION) {
+                    be.setPhase(Phase.IDLE);
+                }
+            }
+            default -> {}
+        }
+    }
+
+    private void completeRitual() {
+        if (level == null || level.isClientSide()) return;
+
+        List<HarmonicNodeBlockEntity> nodes = findNodes();
         for (HarmonicNodeBlockEntity node : nodes) {
             if (node.hasPotion()) {
                 node.extractPotion();
@@ -126,15 +181,34 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
         }
 
         ItemStack result = new ItemStack(ModItems.HARMONIC_OF_ALCHEMY.get());
-        result.set(ModDataComponents.STORED_POTIONS.get(), new StoredPotionsData(List.copyOf(potions)));
+        result.set(ModDataComponents.STORED_POTIONS.get(), new StoredPotionsData(List.copyOf(pendingPotions)));
 
         storedItem = result;
-        setChanged();
-        syncToClient();
+        pendingPotions = null;
+
+        setPhase(Phase.HOLD);
 
         level.playSound(null, worldPosition, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0f, 1.0f);
+    }
 
-        return true;
+    public Phase getPhase() {
+        return phase;
+    }
+
+    public static int getHoldDuration() {
+        return HOLD_DURATION;
+    }
+
+    public long getPhaseStartTime() {
+        return phaseStartTime;
+    }
+
+    public static int getRitualDuration() {
+        return RITUAL_DURATION;
+    }
+
+    public static int getDescendDuration() {
+        return DESCEND_DURATION;
     }
 
     private void syncToClient() {
@@ -149,12 +223,16 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
         if (!storedItem.isEmpty()) {
             output.store("StoredItem", ItemStack.CODEC, storedItem);
         }
+        output.putString("Phase", phase.name());
+        output.putLong("PhaseStartTime", phaseStartTime);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         storedItem = input.read("StoredItem", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        phase = Phase.valueOf(input.getStringOr("Phase", Phase.IDLE.name()));
+        phaseStartTime = input.getLongOr("PhaseStartTime", 0L);
     }
 
     @Override

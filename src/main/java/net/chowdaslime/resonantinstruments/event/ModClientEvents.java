@@ -2,13 +2,10 @@ package net.chowdaslime.resonantinstruments.event;
 
 import net.chowdaslime.resonantinstruments.ResonantInstruments;
 import net.chowdaslime.resonantinstruments.block.entity.ModBlockEntities;
-import net.chowdaslime.resonantinstruments.client.ChronosAcceleratorRenderer;
-import net.chowdaslime.resonantinstruments.client.DivinationTooltip;
-import net.chowdaslime.resonantinstruments.client.HarmonicNodeRenderer;
-import net.chowdaslime.resonantinstruments.client.ResonanceChamberRenderer;
+import net.chowdaslime.resonantinstruments.client.*;
+import net.chowdaslime.resonantinstruments.item.HarmonicOfAlchemyItem;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfDivinationItem;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfResonanceItem;
-import net.chowdaslime.resonantinstruments.client.ResonanceTooltip;
 import net.chowdaslime.resonantinstruments.item.ModEntities;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
@@ -30,6 +27,10 @@ public class ModClientEvents {
 
         if (item instanceof HarmonicOfDivinationItem) {
             DivinationTooltip.addDynamicTooltip(event.getItemStack(), event.getToolTip());
+        }
+
+        if (item instanceof HarmonicOfAlchemyItem) {
+            AlchemyTooltip.addDynamicTooltip(event.getItemStack(), event.getToolTip());
         }
     }
 

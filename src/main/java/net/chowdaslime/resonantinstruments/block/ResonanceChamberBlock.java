@@ -1,24 +1,29 @@
 package net.chowdaslime.resonantinstruments.block;
 
+import net.chowdaslime.resonantinstruments.block.entity.ModBlockEntities;
 import net.chowdaslime.resonantinstruments.block.entity.ResonanceChamberBlockEntity;
+import net.chowdaslime.resonantinstruments.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+
+import javax.annotation.Nullable;
 
 public class ResonanceChamberBlock extends Block implements EntityBlock {
 
@@ -61,32 +66,38 @@ public class ResonanceChamberBlock extends Block implements EntityBlock {
 
         ItemStack handStack = player.getItemInHand(hand);
 
-        if (player.isShiftKeyDown() && handStack.is(Items.NETHER_STAR)) {
-            boolean started = chamber.tryStartRitual();
-            if (started) {
-                if (!player.getAbilities().instabuild) {
-                    handStack.shrink(1);
+        if (chamber.hasItem()) {
+            if (chamber.getPhase() != ResonanceChamberBlockEntity.Phase.IDLE) {
+                return InteractionResult.CONSUME;
+            }
+            ItemStack old = chamber.extractItem();
+            if (!old.isEmpty()) {
+                if (!player.getInventory().add(old)) {
+                    player.drop(old, false);
                 }
             }
             return InteractionResult.CONSUME;
         }
 
-        ItemStack returned = chamber.interact(handStack);
-
-        if (returned == null) {
+        if (handStack.isEmpty() || !handStack.is(ModItems.UNATTUNED_FORK.get())) {
             return InteractionResult.PASS;
         }
 
-        if (!returned.isEmpty()) {
-            if (!player.getInventory().add(returned)) {
-                player.drop(returned, false);
-            }
-        }
-
-        if (!handStack.isEmpty() && !player.getAbilities().instabuild) {
+        boolean inserted = chamber.tryInsertFork(handStack);
+        if (inserted && !player.getAbilities().instabuild) {
             handStack.shrink(1);
         }
+        return inserted ? InteractionResult.CONSUME : InteractionResult.PASS;
+    }
 
-        return InteractionResult.CONSUME;
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide()) return null;
+        if (type == ModBlockEntities.RESONANCE_CHAMBER_BLOCK_ENTITY.get()) {
+            return (BlockEntityTicker<T>) (lvl, pos, st, be) ->
+                    ResonanceChamberBlockEntity.serverTick(lvl, pos, st, (ResonanceChamberBlockEntity) be);
+        }
+        return null;
     }
 }

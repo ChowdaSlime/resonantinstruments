@@ -21,6 +21,10 @@ import javax.annotation.Nullable;
 
 public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceChamberBlockEntity, ResonanceChamberRenderer.ResonanceChamberRenderState> {
 
+    private static final float MAX_LIFT = 1.3f;
+    private static final float SPIN_BASE_SPEED = 8.0f;
+    private static final float LIFT_RISE_DURATION = 40f;
+
     private final ItemModelResolver itemModelResolver;
 
     public ResonanceChamberRenderer(BlockEntityRendererProvider.Context context) {
@@ -30,8 +34,11 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
     public static class ResonanceChamberRenderState extends BlockEntityRenderState {
         public final ItemStackRenderState itemState = new ItemStackRenderState();
         public boolean hasItem;
-        public long gameTime;
         public float partialTick;
+        public ResonanceChamberBlockEntity.Phase phase;
+        public float elapsed;
+        public float lift;
+        public float spinElapsed;
     }
 
     @Override
@@ -48,7 +55,31 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
         ItemStack stack = blockEntity.getStoredItem();
         state.hasItem = !stack.isEmpty();
         state.partialTick = partialTick;
-        state.gameTime = blockEntity.getLevel() != null ? blockEntity.getLevel().getGameTime() : 0L;
+
+        long gameTime = blockEntity.getLevel() != null ? blockEntity.getLevel().getGameTime() : 0L;
+        state.phase = blockEntity.getPhase();
+        state.elapsed = (gameTime - blockEntity.getPhaseStartTime()) + partialTick;
+
+        switch (state.phase) {
+            case RITUAL -> {
+                float t = Math.min(1.0f, state.elapsed / LIFT_RISE_DURATION);
+                state.lift = t * MAX_LIFT;
+            }
+            case HOLD -> state.lift = MAX_LIFT;
+            case DESCEND -> {
+                float t = Math.min(1.0f, state.elapsed / ResonanceChamberBlockEntity.getDescendDuration());
+                state.lift = (1.0f - t) * MAX_LIFT;
+            }
+            default -> state.lift = 0.0f;
+        }
+
+        if (state.phase == ResonanceChamberBlockEntity.Phase.RITUAL) {
+            float duration = ResonanceChamberBlockEntity.getRitualDuration();
+            float t = state.elapsed;
+            state.spinElapsed = SPIN_BASE_SPEED * (t + (t * t) / duration);
+        } else {
+            state.spinElapsed = (gameTime + partialTick) * SPIN_BASE_SPEED;
+        }
 
         if (state.hasItem) {
             this.itemModelResolver.updateForTopItem(state.itemState, stack, ItemDisplayContext.FIXED,
@@ -65,13 +96,12 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
 
         poseStack.pushPose();
         try {
-            poseStack.translate(0.5D, 1.15D, 0.5D);
+            poseStack.translate(0.5D, 1.15D + state.lift, 0.5D);
 
-            float time = state.gameTime + state.partialTick;
-            float bobOffset = (float) Math.sin(time * 0.05f) * 0.04f;
+            float bobOffset = (float) Math.sin(state.spinElapsed * 0.025f) * 0.04f;
             poseStack.translate(0.0, bobOffset, 0.0);
 
-            float rotationDegrees = (time * 2.0f) % 360f;
+            float rotationDegrees = state.spinElapsed % 360f;
             poseStack.mulPose(Axis.YP.rotationDegrees(rotationDegrees));
 
             float scale = 0.5f;
