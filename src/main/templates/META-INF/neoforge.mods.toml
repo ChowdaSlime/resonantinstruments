@@ -40,7 +40,7 @@ authors="ChowdaSlime"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Harness the power of sound to create powerful tools that let you manipulate blocks, entities, and even time.
+Harness the power of sound to create powerful tools that let you manipulate the world around you.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
