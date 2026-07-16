@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceChamberBlockEntity, ResonanceChamberRenderer.ResonanceChamberRenderState> {
 
-    private static final float MAX_LIFT = 1.3f;
+    private static final float MAX_LIFT = 1.1f;
     private static final float SPIN_BASE_SPEED = 8.0f;
     private static final float PEAK_SPIN_SPEED = 24.0f;
     private static final float LIFT_RISE_DURATION = 40f;
@@ -36,10 +36,16 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
     private static final float RING_RETRACT_DURATION = 10f;
     private static final float RING_APPEAR_DELAY = 5f;
     private static final float RING_APPEAR_TIME = LIFT_RISE_DURATION + RING_APPEAR_DELAY;
+    private static final float CIRCLE_APPEAR_TIME = 5f;
     private static final float SPIN_RAMP_FRACTION = 0.35f;
+    private static final float RUNE_INNER_SPEED_MULT = 0.5f;
+    private static final float RUNE_OUTER_SPEED_MULT = -0.25f;
+    private static final float RUNE_CIRCLE_RADIUS = 3.35f;
 
     private static final Identifier LIGHTNING_TEXTURE = Identifier.fromNamespaceAndPath("resonantinstruments", "textures/entity/ritual_lightning.png");
     private static final Identifier RINGS_TEXTURE = Identifier.fromNamespaceAndPath("resonantinstruments", "textures/entity/ritual_rings.png");
+    private static final Identifier RUNE_OUTER_TEXTURE = Identifier.fromNamespaceAndPath("resonantinstruments", "textures/entity/ritual_circle_outer.png");
+    private static final Identifier RUNE_INNER_TEXTURE = Identifier.fromNamespaceAndPath("resonantinstruments", "textures/entity/ritual_circle_inner.png");
 
     private final ItemModelResolver itemModelResolver;
     private final RitualRings ringsModel;
@@ -58,6 +64,10 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
         public float lift;
         public float spinElapsed;
         public float ringSpinElapsed;
+        public float runeSpinInner;
+        public float runeSpinOuter;
+        public boolean runeCircleVisible;
+        public boolean ringsVisible;
         public final List<BlockPos> activeNodes = new ArrayList<>();
         public float lightningProgress = 0.0f;
         public BlockPos chamberPos;
@@ -111,7 +121,6 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
             state.lightningProgress = 0.0f;
         }
 
-        float rotationDuration = (float) Math.sin(0);
         float ritualDuration = ResonanceChamberBlockEntity.getRitualDuration();
         float holdDuration = ResonanceChamberBlockEntity.getHoldDuration();
 
@@ -127,8 +136,6 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
 
         float angleAtRampUpEnd = PEAK_SPIN_SPEED * ringRampDur * smoothstepIntegral(1f);
         float angleAtHoldEnd = angleAtRampUpEnd + PEAK_SPIN_SPEED * ringHoldDur;
-        float rampDownIntegralFull = 1f - smoothstepIntegral(1f);
-        float angleAtRampDownEnd = angleAtHoldEnd + PEAK_SPIN_SPEED * ringRampDur * rampDownIntegralFull;
 
         float ringElapsed;
         if (state.phase == ResonanceChamberBlockEntity.Phase.RITUAL) {
@@ -151,6 +158,36 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
             state.ringSpinElapsed = angleAtHoldEnd + PEAK_SPIN_SPEED * ringRampDur * rampDownIntegral;
         }
 
+        float rampDownIntegralFull = 1f - smoothstepIntegral(1f);
+        float totalRingSpinAngle = angleAtHoldEnd + PEAK_SPIN_SPEED * ringRampDur * rampDownIntegralFull;
+
+        float innerScale = RUNE_INNER_SPEED_MULT;
+        float outerScale = RUNE_OUTER_SPEED_MULT;
+        if (totalRingSpinAngle != 0f) {
+            float rawInnerTotal = totalRingSpinAngle * RUNE_INNER_SPEED_MULT;
+            float snappedInnerTotal = Math.round(rawInnerTotal / 45f) * 45f;
+            innerScale = snappedInnerTotal / totalRingSpinAngle;
+
+            float rawOuterTotal = totalRingSpinAngle * RUNE_OUTER_SPEED_MULT;
+            float snappedOuterTotal = Math.round(rawOuterTotal / 45f) * 45f;
+            outerScale = snappedOuterTotal / totalRingSpinAngle;
+        }
+
+        if (state.phase == ResonanceChamberBlockEntity.Phase.RITUAL || state.phase == ResonanceChamberBlockEntity.Phase.HOLD) {
+            state.runeSpinInner = state.ringSpinElapsed * innerScale;
+            state.runeSpinOuter = state.ringSpinElapsed * outerScale;
+        } else {
+            state.runeSpinInner = 0f;
+            state.runeSpinOuter = 0f;
+        }
+
+        boolean showRings = state.phase == ResonanceChamberBlockEntity.Phase.RITUAL
+                || state.phase == ResonanceChamberBlockEntity.Phase.HOLD;
+        state.runeCircleVisible = showRings
+                && (state.phase != ResonanceChamberBlockEntity.Phase.RITUAL || state.elapsed >= CIRCLE_APPEAR_TIME);
+        state.ringsVisible = showRings
+                && (state.phase != ResonanceChamberBlockEntity.Phase.RITUAL || state.elapsed >= RING_APPEAR_TIME);
+
         if (state.hasItem) {
             this.itemModelResolver.updateForTopItem(state.itemState, stack, ItemDisplayContext.FIXED,
                     blockEntity.getLevel(), null, (int) blockEntity.getBlockPos().asLong());
@@ -161,7 +198,7 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
 
     @Override
     public void submit(ResonanceChamberRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
-        if (state.lightningProgress > 0.0f && !state.activeNodes.isEmpty() && state.chamberPos != null) {
+        if (state.lightningProgress > 0.0f && !state.runeCircleVisible && !state.activeNodes.isEmpty() && state.chamberPos != null) {
             float startDist = 2.75f;
             float currentEdge = startDist - (startDist * state.lightningProgress);
 
@@ -203,16 +240,8 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
                 state.phase == ResonanceChamberBlockEntity.Phase.HOLD;
 
         if (showRings) {
-            boolean ringsVisible;
-
-            if (state.phase == ResonanceChamberBlockEntity.Phase.RITUAL) {
-                ringsVisible = state.elapsed >= RING_APPEAR_TIME;
-            } else {
-                ringsVisible = true;
-            }
-
-            if (ringsVisible) {
-                final double RING_ANCHOR_Y = 1.15D + MAX_LIFT;
+            if (state.ringsVisible) {
+                final double RING_ANCHOR_Y = 1.35D + MAX_LIFT;
 
                 poseStack.pushPose();
                 poseStack.translate(0.5D, RING_ANCHOR_Y, 0.5D);
@@ -259,11 +288,21 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
                     poseStack.popPose();
                 }
             }
+
+            if (state.runeCircleVisible) {
+                poseStack.pushPose();
+                poseStack.translate(0.5D, 0.0D, 0.5D);
+
+                submitFlatQuad(poseStack, submitNodeCollector, RUNE_OUTER_TEXTURE, state.runeSpinOuter, RUNE_CIRCLE_RADIUS, 0.02D);
+                submitFlatQuad(poseStack, submitNodeCollector, RUNE_INNER_TEXTURE, state.runeSpinInner, RUNE_CIRCLE_RADIUS, 0.03D);
+
+                poseStack.popPose();
+            }
         }
 
         poseStack.pushPose();
         try {
-            poseStack.translate(0.5D, 1.15D + state.lift, 0.5D);
+            poseStack.translate(0.5D, 1.35D + state.lift, 0.5D);
 
             float bobOffset = (float) Math.sin(state.spinElapsed * 0.025f) * 0.04f;
             poseStack.translate(0.0, bobOffset, 0.0);
@@ -286,5 +325,23 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
         } finally {
             poseStack.popPose();
         }
+    }
+
+    private void submitFlatQuad(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Identifier texture, float rotationDegrees, float radius, double yOffset) {
+        poseStack.pushPose();
+        poseStack.translate(0.0D, yOffset, 0.0D);
+        poseStack.mulPose(Axis.YP.rotationDegrees(rotationDegrees));
+
+        submitNodeCollector.submitCustomGeometry(
+                poseStack,
+                RenderTypes.entityTranslucentEmissive(texture),
+                (PoseStack.Pose pose, VertexConsumer buffer) -> {
+                    buffer.addVertex(pose.pose(), -radius, 0f, -radius).setColor(-1).setUv(0f, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                    buffer.addVertex(pose.pose(), -radius, 0f, radius).setColor(-1).setUv(0f, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                    buffer.addVertex(pose.pose(), radius, 0f, radius).setColor(-1).setUv(1f, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                    buffer.addVertex(pose.pose(), radius, 0f, -radius).setColor(-1).setUv(1f, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                });
+
+        poseStack.popPose();
     }
 }
