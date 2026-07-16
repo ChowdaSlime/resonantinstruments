@@ -27,16 +27,19 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
 
     private ItemStack storedItem = ItemStack.EMPTY;
 
+    private static final float MAX_LIFT = 1.3f;
+    public static final int GATHER_DURATION = 160;
     private static final int RITUAL_DURATION = 200;
     private static final int HOLD_DURATION = 20;
     private static final int DESCEND_DURATION = 30;
 
-    public enum Phase { IDLE, RITUAL, HOLD, DESCEND }
+    public enum Phase { IDLE, GATHER, RITUAL, HOLD, DESCEND }
 
     private Phase phase = Phase.IDLE;
     private long phaseStartTime = 0L;
 
     private List<PotionContents> pendingPotions = null;
+    private final List<BlockPos> activeNodes = new ArrayList<>();
 
     private static final BlockPos[] NODE_OFFSETS = new BlockPos[]{
             new BlockPos(3, 0, 0),
@@ -111,6 +114,10 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
         return nodes;
     }
 
+    public List<BlockPos> getActiveNodes() {
+        return this.activeNodes;
+    }
+
     public boolean tryStartRitual() {
         if (level == null || level.isClientSide()) return false;
         if (phase != Phase.IDLE) return false;
@@ -119,6 +126,7 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
 
         List<HarmonicNodeBlockEntity> nodes = findNodes();
         List<PotionContents> potions = new ArrayList<>();
+        this.activeNodes.clear();
 
         for (HarmonicNodeBlockEntity node : nodes) {
             if (node.hasPotion()) {
@@ -126,6 +134,7 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
                 PotionContents contents = potionStack.get(DataComponents.POTION_CONTENTS);
                 if (contents != null) {
                     potions.add(contents);
+                    this.activeNodes.add(node.getBlockPos());
                 }
             }
         }
@@ -133,7 +142,7 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
         if (potions.isEmpty()) return false;
 
         this.pendingPotions = potions;
-        setPhase(Phase.RITUAL);
+        setPhase(Phase.GATHER);
 
         return true;
     }
@@ -148,9 +157,19 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
     public static void serverTick(Level level, BlockPos pos, BlockState state, ResonanceChamberBlockEntity be) {
         if (be.phase == Phase.IDLE) return;
 
+        if ((be.phase == Phase.GATHER || be.phase == Phase.RITUAL) && be.pendingPotions == null) {
+            be.setPhase(Phase.IDLE);
+            return;
+        }
+
         long elapsed = level.getGameTime() - be.phaseStartTime;
 
         switch (be.phase) {
+            case GATHER -> {
+                if (elapsed >= GATHER_DURATION) {
+                    be.setPhase(Phase.RITUAL);
+                }
+            }
             case RITUAL -> {
                 if (elapsed >= RITUAL_DURATION) {
                     be.completeRitual();
@@ -158,6 +177,11 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
             }
             case HOLD -> {
                 if (elapsed >= HOLD_DURATION) {
+                    if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+                        serverLevel.sendParticles(
+                                net.minecraft.core.particles.ParticleTypes.FIREWORK,
+                                pos.getX() + 0.5, pos.getY() + 1.15 + MAX_LIFT, pos.getZ() + 0.5, 20, 0.3, 0.3, 0.3, 0.05);
+                    }
                     be.setPhase(Phase.DESCEND);
                 }
             }
@@ -225,6 +249,9 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
         }
         output.putString("Phase", phase.name());
         output.putLong("PhaseStartTime", phaseStartTime);
+        if (!this.activeNodes.isEmpty()) {
+            output.store("ActiveNodes", BlockPos.CODEC.listOf(), this.activeNodes);
+        }
     }
 
     @Override
@@ -233,6 +260,8 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
         storedItem = input.read("StoredItem", ItemStack.CODEC).orElse(ItemStack.EMPTY);
         phase = Phase.valueOf(input.getStringOr("Phase", Phase.IDLE.name()));
         phaseStartTime = input.getLongOr("PhaseStartTime", 0L);
+        this.activeNodes.clear();
+        input.read("ActiveNodes", BlockPos.CODEC.listOf()).ifPresent(this.activeNodes::addAll);
     }
 
     @Override

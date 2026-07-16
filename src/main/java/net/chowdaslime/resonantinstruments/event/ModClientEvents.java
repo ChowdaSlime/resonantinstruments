@@ -3,6 +3,7 @@ package net.chowdaslime.resonantinstruments.event;
 import net.chowdaslime.resonantinstruments.ResonantInstruments;
 import net.chowdaslime.resonantinstruments.block.entity.ModBlockEntities;
 import net.chowdaslime.resonantinstruments.client.*;
+import net.chowdaslime.resonantinstruments.entity.RitualRings;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfAlchemyItem;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfDivinationItem;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfResonanceItem;
@@ -39,5 +40,10 @@ public class ModClientEvents {
         event.registerEntityRenderer(ModEntities.CHRONOS_ACCELERATOR.get(), ChronosAcceleratorRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.HARMONIC_NODE_BLOCK_ENTITY.get(), HarmonicNodeRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.RESONANCE_CHAMBER_BLOCK_ENTITY.get(), ResonanceChamberRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(RitualRings.LAYER_LOCATION, RitualRings::createBodyLayer);
     }
 }
