@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:hopper",
+    "minecraft:enchanting_table",
+    "minecraft:beacon",
+    "minecraft:conduit",
+    "minecraft:daylight_detector",
+    "minecraft:bell",
+    "minecraft:jukebox",
+    "minecraft:sculk_sensor",
+    "minecraft:sculk_shrieker",
+    "minecraft:sculk_catalyst",
+    "minecraft:moving_piston",
+    "minecraft:end_gateway",
+    "minecraft:end_portal",
+    "#c:chests",
+    "#c:shulker_boxes"
+  ]
+}

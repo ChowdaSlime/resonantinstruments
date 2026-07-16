@@ -1,13 +1,14 @@
 {
-  "itemGroup.resonantinstruments": "Example Mod Tab",
-  "block.resonantinstruments.example_block": "Example Block",
-  "item.resonantinstruments.example_item": "Example Item",
+  "item.resonantinstruments.unattuned_fork": "Unattuned Fork",
+  "item.resonantinstruments.harmonic_of_vitality": "Harmonic of Vitality",
+  "item.resonantinstruments.harmonic_of_resonance": "Harmonic of Resonance",
+  "item.resonantinstruments.harmonic_of_chronos": "Harmonic of Chronos",
+  "item.resonantinstruments.harmonic_of_divination": "Harmonic of Divination",
+  "item.resonantinstruments.harmonic_of_alchemy": "Harmonic of Alchemy",
 
-  "resonantinstruments.configuration.title": "Resonant Instruments Configs",
-  "resonantinstruments.configuration.section.resonantinstruments.common.toml": "Resonant Instruments Configs",
-  "resonantinstruments.configuration.section.resonantinstruments.common.toml.title": "Resonant Instruments Configs",
-  "resonantinstruments.configuration.items": "Item List",
-  "resonantinstruments.configuration.logDirtBlock": "Log Dirt Block",
-  "resonantinstruments.configuration.magicNumberIntroduction": "Magic Number Text",
-  "resonantinstruments.configuration.magicNumber": "Magic Number"
+  "block.resonantinstruments.resonance_chamber": "Resonance Chamber",
+  "block.resonantinstruments.harmonic_node": "Harmonic Node",
+
+
+  "creativetab.resonant_instruments_tab": "Resonant Instruments"
 }

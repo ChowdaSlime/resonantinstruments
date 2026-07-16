@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "resonantinstruments:item/harmonic_of_chronos"
+  }
+}
