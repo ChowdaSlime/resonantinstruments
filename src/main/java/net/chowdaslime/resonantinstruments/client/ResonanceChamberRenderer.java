@@ -41,6 +41,11 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
     private static final float RUNE_INNER_SPEED_MULT = 0.5f;
     private static final float RUNE_OUTER_SPEED_MULT = -0.25f;
     private static final float RUNE_CIRCLE_RADIUS = 3.35f;
+    private static final float RUNE_PULSE_SPEED = 0.12f;
+    private static final float RUNE_PULSE_MIN_BRIGHTNESS = 0.45f;
+    private static final float RUNE_PULSE_MAX_BRIGHTNESS = 1.0f;
+    private static final float LIGHTNING_HALF_WIDTH = 0.5f;
+    private static final float LIGHTNING_CONSUME_WINDOW = CIRCLE_APPEAR_TIME;
 
     private static final Identifier LIGHTNING_TEXTURE = Identifier.fromNamespaceAndPath("resonantinstruments", "textures/entity/ritual_lightning.png");
     private static final Identifier RINGS_TEXTURE = Identifier.fromNamespaceAndPath("resonantinstruments", "textures/entity/ritual_rings.png");
@@ -66,10 +71,12 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
         public float ringSpinElapsed;
         public float runeSpinInner;
         public float runeSpinOuter;
+        public float runePulse;
         public boolean runeCircleVisible;
         public boolean ringsVisible;
         public final List<BlockPos> activeNodes = new ArrayList<>();
         public float lightningProgress = 0.0f;
+        public float lightningConsume = 0.0f;
         public BlockPos chamberPos;
     }
 
@@ -81,6 +88,17 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
     private static float smoothstepIntegral(float x) {
         x = Math.max(0f, Math.min(1f, x));
         return x * x * x - (x * x * x * x) / 2f;
+    }
+
+    private static int pulseColor(float pulse) {
+        float brightness = RUNE_PULSE_MIN_BRIGHTNESS + (RUNE_PULSE_MAX_BRIGHTNESS - RUNE_PULSE_MIN_BRIGHTNESS) * pulse;
+        int c = Math.round(brightness * 255f) & 0xFF;
+        return 0xFF000000 | (c << 16) | (c << 8) | c;
+    }
+
+    private static int colorWithAlpha(float alpha) {
+        int a = Math.round(Math.max(0f, Math.min(1f, alpha)) * 255f) & 0xFF;
+        return (a << 24) | 0x00FFFFFF;
     }
 
     @Override
@@ -119,6 +137,15 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
             state.lightningProgress = 1.0f;
         } else {
             state.lightningProgress = 0.0f;
+        }
+
+        if (state.phase == ResonanceChamberBlockEntity.Phase.RITUAL) {
+            state.lightningConsume = Math.min(1.0f, state.elapsed / LIGHTNING_CONSUME_WINDOW);
+        } else if (state.phase == ResonanceChamberBlockEntity.Phase.HOLD
+                || state.phase == ResonanceChamberBlockEntity.Phase.DESCEND) {
+            state.lightningConsume = 1.0f;
+        } else {
+            state.lightningConsume = 0.0f;
         }
 
         float ritualDuration = ResonanceChamberBlockEntity.getRitualDuration();
@@ -181,6 +208,12 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
             state.runeSpinOuter = 0f;
         }
 
+        if (state.phase == ResonanceChamberBlockEntity.Phase.RITUAL || state.phase == ResonanceChamberBlockEntity.Phase.HOLD) {
+            state.runePulse = 0.5f + 0.5f * (float) Math.sin(state.elapsed * RUNE_PULSE_SPEED);
+        } else {
+            state.runePulse = 1.0f;
+        }
+
         boolean showRings = state.phase == ResonanceChamberBlockEntity.Phase.RITUAL
                 || state.phase == ResonanceChamberBlockEntity.Phase.HOLD;
         state.runeCircleVisible = showRings
@@ -198,9 +231,16 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
 
     @Override
     public void submit(ResonanceChamberRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
-        if (state.lightningProgress > 0.0f && !state.runeCircleVisible && !state.activeNodes.isEmpty() && state.chamberPos != null) {
+        if (state.lightningProgress > 0.0f && state.lightningConsume < 1.0f && !state.activeNodes.isEmpty() && state.chamberPos != null) {
             float startDist = 2.75f;
             float currentEdge = startDist - (startDist * state.lightningProgress);
+            float consume = state.lightningConsume;
+            float farEdge = startDist - (startDist - currentEdge) * consume;
+            float alpha = 1.0f - consume;
+            float halfWidth = LIGHTNING_HALF_WIDTH;
+
+            int tipColor = colorWithAlpha(alpha);
+            int farColor = colorWithAlpha(alpha);
 
             for (BlockPos nodePos : state.activeNodes) {
                 poseStack.pushPose();
@@ -220,14 +260,20 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
                     poseStack.mulPose(Axis.YP.rotationDegrees(90));
                 }
 
+                final float finalCurrentEdge = currentEdge;
+                final float finalFarEdge = farEdge;
+                final float finalHalfWidth = halfWidth;
+                final int finalTipColor = tipColor;
+                final int finalFarColor = farColor;
+
                 submitNodeCollector.submitCustomGeometry(
                         poseStack,
                         RenderTypes.entityTranslucentEmissive(LIGHTNING_TEXTURE),
                         (PoseStack.Pose pose, VertexConsumer buffer) -> {
-                            buffer.addVertex(pose.pose(), startDist, 0f, -0.5f).setColor(-1).setUv(0f, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
-                            buffer.addVertex(pose.pose(), currentEdge, 0f, -0.5f).setColor(-1).setUv(state.lightningProgress, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
-                            buffer.addVertex(pose.pose(), currentEdge, 0f, 0.5f).setColor(-1).setUv(state.lightningProgress, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
-                            buffer.addVertex(pose.pose(), startDist, 0f, 0.5f).setColor(-1).setUv(0f, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                            buffer.addVertex(pose.pose(), finalFarEdge, 0f, -finalHalfWidth).setColor(finalFarColor).setUv(0f, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                            buffer.addVertex(pose.pose(), finalCurrentEdge, 0f, -finalHalfWidth).setColor(finalTipColor).setUv(state.lightningProgress, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                            buffer.addVertex(pose.pose(), finalCurrentEdge, 0f, finalHalfWidth).setColor(finalTipColor).setUv(state.lightningProgress, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                            buffer.addVertex(pose.pose(), finalFarEdge, 0f, finalHalfWidth).setColor(finalFarColor).setUv(0f, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
                         });
 
                 poseStack.popPose();
@@ -293,8 +339,9 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
                 poseStack.pushPose();
                 poseStack.translate(0.5D, 0.0D, 0.5D);
 
-                submitFlatQuad(poseStack, submitNodeCollector, RUNE_OUTER_TEXTURE, state.runeSpinOuter, RUNE_CIRCLE_RADIUS, 0.02D);
-                submitFlatQuad(poseStack, submitNodeCollector, RUNE_INNER_TEXTURE, state.runeSpinInner, RUNE_CIRCLE_RADIUS, 0.03D);
+                int runeColor = pulseColor(state.runePulse);
+                submitFlatQuad(poseStack, submitNodeCollector, RUNE_OUTER_TEXTURE, state.runeSpinOuter, RUNE_CIRCLE_RADIUS, 0.02D, runeColor);
+                submitFlatQuad(poseStack, submitNodeCollector, RUNE_INNER_TEXTURE, state.runeSpinInner, RUNE_CIRCLE_RADIUS, 0.03D, runeColor);
 
                 poseStack.popPose();
             }
@@ -327,7 +374,7 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
         }
     }
 
-    private void submitFlatQuad(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Identifier texture, float rotationDegrees, float radius, double yOffset) {
+    private void submitFlatQuad(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, Identifier texture, float rotationDegrees, float radius, double yOffset, int color) {
         poseStack.pushPose();
         poseStack.translate(0.0D, yOffset, 0.0D);
         poseStack.mulPose(Axis.YP.rotationDegrees(rotationDegrees));
@@ -336,10 +383,10 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
                 poseStack,
                 RenderTypes.entityTranslucentEmissive(texture),
                 (PoseStack.Pose pose, VertexConsumer buffer) -> {
-                    buffer.addVertex(pose.pose(), -radius, 0f, -radius).setColor(-1).setUv(0f, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
-                    buffer.addVertex(pose.pose(), -radius, 0f, radius).setColor(-1).setUv(0f, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
-                    buffer.addVertex(pose.pose(), radius, 0f, radius).setColor(-1).setUv(1f, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
-                    buffer.addVertex(pose.pose(), radius, 0f, -radius).setColor(-1).setUv(1f, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                    buffer.addVertex(pose.pose(), -radius, 0f, -radius).setColor(color).setUv(0f, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                    buffer.addVertex(pose.pose(), -radius, 0f, radius).setColor(color).setUv(0f, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                    buffer.addVertex(pose.pose(), radius, 0f, radius).setColor(color).setUv(1f, 1f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
+                    buffer.addVertex(pose.pose(), radius, 0f, -radius).setColor(color).setUv(1f, 0f).setOverlay(OverlayTexture.NO_OVERLAY).setLight(15728880).setNormal(pose, 0f, 1f, 0f);
                 });
 
         poseStack.popPose();
