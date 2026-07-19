@@ -1,0 +1,11 @@
+{
+  "name": "Welcome",
+  "icon": "resonantinstruments:unattuned_fork",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Sound hold a power that many don't understand. It's not just something you hear in this world, it's something you can learn to $(l)wield$(). This book will guide you through the basics of how to harness the power of sound."
+    }
+  ]
+}

@@ -27,6 +27,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.HARMONIC_OF_DIVINATION.get());
                         output.accept(ModBlocks.RESONANCE_CHAMBER.get());
                         output.accept(ModBlocks.HARMONIC_NODE.get());
+                        output.accept(ModItems.GUIDE_BOOK.get());
                     })
                     .build());
 

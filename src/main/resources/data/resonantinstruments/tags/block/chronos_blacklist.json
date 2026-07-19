@@ -14,7 +14,7 @@
     "minecraft:moving_piston",
     "minecraft:end_gateway",
     "minecraft:end_portal",
-    "#c:chests",
-    "#c:shulker_boxes"
+    "minecraft:shulker_box",
+    "minecraft:chest"
   ]
 }

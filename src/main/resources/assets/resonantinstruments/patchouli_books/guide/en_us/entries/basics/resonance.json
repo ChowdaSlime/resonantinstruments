@@ -1,0 +1,19 @@
+{
+  "name": "Harmonic of Resonance",
+  "icon": "resonantinstruments:harmonic_of_resonance",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(item)Harmonic of Resonance$()$(br2)A frequency drawn from the deepest, oldest stone. It hums with the memory of breaking."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Attunement$()$(br)Strike an Unattuned Fork against bedrock at the very bottom of the world This will tune it to become the Harmonic of Resonance."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Use$()$(br)Functions as both a mining tool and a weapon. As you continue to mine blocks with it, you hone its power to make it grow stronger.  Each tier will increase both its mining level and its strength in combat.$(br2)A newly attuned Harmonic starts modest. Given time and use, it becomes something far more capable, something that can destroy even the toughest of materials."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Harmonic of Vitality",
+  "icon": "resonantinstruments:harmonic_of_vitality",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(item)Harmonic of Vitality$()$(br2)A frequency tuned to growth and life. It carries the resonance of things that flourish."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Attunement$()$(br)Strike an Unattuned Fork against a fully grown crop, or against any animal. This will tune it to become the Harmonic of Vitality."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Use$()$(br)Right-click around crops to release a wave of resonance around you. Nearby growable plants receive random growth ticks, and nearby animals may be enticed to breed, if used directly on baby animals, it will advance their growth timer, without needing to be fed first.$(br2)The effect has a short cooldown between uses."
+    }
+  ]
+}

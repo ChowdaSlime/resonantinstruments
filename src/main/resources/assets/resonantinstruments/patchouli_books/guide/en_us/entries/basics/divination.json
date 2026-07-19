@@ -1,0 +1,19 @@
+{
+  "name": "Harmonic of Divination",
+  "icon": "resonantinstruments:harmonic_of_divination",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(item)Harmonic of Divination$()$(br2)A frequency that echoes back the location of a single, chosen material."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Attunement$()$(br)Strike an Unattuned Fork against Budding Amethyst. This will tune it to become the Harmonic of Divination."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Use$()$(br)Right-click any block to tune the fork to that material. Once tuned, left-clicking will send out a searching pulse. If a block of that type is found nearby, a trail of guiding particles will point the way toward it.$(br2)The search has a cooldown between uses, so choose your moment with intention as you may not always receive a hit."
+    }
+  ]
+}

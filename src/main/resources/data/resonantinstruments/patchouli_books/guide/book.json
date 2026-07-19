@@ -1,0 +1,8 @@
+{
+  "name": "Resonant Codex",
+  "landing_text": "Harness the power of sound to manipulate the world around you.",
+  "version": 1,
+  "creative_tab": "resonantinstruments:resonantinstruments_tab",
+  "use_resource_pack": true,
+  "show_progress": false
+}

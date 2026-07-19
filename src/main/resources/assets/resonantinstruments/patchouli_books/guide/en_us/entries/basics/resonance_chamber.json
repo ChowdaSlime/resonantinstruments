@@ -1,0 +1,41 @@
+{
+  "name": "The Resonance Chamber",
+  "icon": "resonantinstruments:resonance_chamber",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Resonance Chamber is a ritual structure that draws the power of potions into an Unattuned Fork. This creates a Harmonic of Alchemy. It is built from a central Resonance Chamber surrounded by up to four Harmonic Nodes."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Resonance Chamber",
+      "multiblock": {
+        "pattern": [
+          [
+            "   H   ",
+            "       ",
+            "       ",
+            "H  0  H",
+            "       ",
+            "       ",
+            "   H   "
+          ]
+        ],
+        "mapping": {
+          "H": "resonantinstruments:harmonic_node",
+          "0": "resonantinstruments:resonance_chamber"
+        },
+        "symmetrical": true
+      }
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Each Harmonic Node can be given a potion to hold. You do not need to fill all four, only the nodes holding a potion will contribute to the ritual."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Right-click the Resonance Chamber with an Unattuned Fork to place it inside. Once the chamber holds a fork and at least one node holds a potion, shift-right-click the chamber with a Nether Star to begin the ritual.$(br2)The chamber will gather energy, then complete the ritual, consuming the stored potions and the Nether Star, leaving behind a Harmonic of Alchemy carrying every potion effect that was offered."
+    }
+  ]
+}

@@ -28,6 +28,7 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.HARMONIC_OF_CHRONOS.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.HARMONIC_OF_DIVINATION.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.HARMONIC_OF_ALCHEMY.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(ModItems.GUIDE_BOOK.get(), ModelTemplates.FLAT_ITEM);
 
         Block chamber = ModBlocks.RESONANCE_CHAMBER.get();
         var chamberModelLoc = ModelLocationUtils.getModelLocation(chamber);

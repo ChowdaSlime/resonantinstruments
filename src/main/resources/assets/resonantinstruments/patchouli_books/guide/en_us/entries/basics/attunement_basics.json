@@ -1,0 +1,19 @@
+{
+  "name": "Attunement",
+  "icon": "resonantinstruments:unattuned_fork",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Every path in this book begins with the $(item)Unattuned Fork$(). On its own, it does nothing. It's a blank instrument, waiting to be $(l)tuned$() to a purpose."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "To attune a fork, you must strike it under the correct circumstances. Each frequency responds to something different. A fully grown crop, a creature, bedrock lying at the bottom of the world, an enchanting table as the clock hits midnight.$(br2)Right-click the fork against the correct target to complete the attunement. The fork will transform, permanently, into the appropriate Harmonic."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Once attuned, a Harmonic cannot be returned to its blank state, so choose your target carefully (although they are not too difficult to make!). The following pages describe each Harmonic in turn, along with how to attune and use it."
+    }
+  ]
+}

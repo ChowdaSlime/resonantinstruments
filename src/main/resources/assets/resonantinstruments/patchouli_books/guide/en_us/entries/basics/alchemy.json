@@ -1,0 +1,19 @@
+{
+  "name": "Harmonic of Alchemy",
+  "icon": "resonantinstruments:harmonic_of_alchemy",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(item)Harmonic of Alchemy$()$(br2)A frequency that carries the memory of a potion within it, ready to be released again and again."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Attunement$()$(br)Unlike the other Harmonics, the Harmonic of Alchemy is not attuned by striking. It is created through the Resonance Chamber, a ritual structure that draws energy from stored potions, infusing them into an Unattuned Fork.$(br2)See the following page for how to build and use the Resonance Chamber."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Use$()$(br)Right-click in the air to apply the stored potion effects to yourself, or right-click an entity to apply them instead. There is a lengthy cooldown between uses, so be mindful with how you use it."
+    }
+  ]
+}

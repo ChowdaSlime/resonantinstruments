@@ -4,6 +4,7 @@ import net.chowdaslime.resonantinstruments.ResonantInstruments;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModItems {
@@ -33,6 +34,9 @@ public class ModItems {
     public static final DeferredHolder<Item, HarmonicOfAlchemyItem> HARMONIC_OF_ALCHEMY =
             ITEMS.registerItem("harmonic_of_alchemy",
                     properties -> new HarmonicOfAlchemyItem(properties.stacksTo(1))
+            );
+    public static final DeferredItem<Item> GUIDE_BOOK = ITEMS.registerItem("guide_book",
+            properties -> new GuideBookItem(properties.stacksTo(1))
             );
 
 

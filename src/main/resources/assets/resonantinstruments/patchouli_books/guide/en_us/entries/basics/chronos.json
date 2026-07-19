@@ -1,0 +1,19 @@
+{
+  "name": "Harmonic of Chronos",
+  "icon": "resonantinstruments:harmonic_of_chronos",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(item)Harmonic of Chronos$()$(br2)A frequency that does not belong to any single moment. It bends time around whatever it touches."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Attunement$()$(br)Strike an Unattuned Fork against an Enchanting Table exactly at midnight. This will tune it to become the Harmonic of Chronos."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Use$()$(br)Hold (shift) right-click while aiming at a block, and release once you have charged long enough. The longer you charge, the greater the acceleration placed on that block, doubling with every second held.$(br2)Charging draws on your hunger, so accelerating time comes at a cost. Some blocks may resist the effect entirely and cannot be accelerated."
+    }
+  ]
+}
