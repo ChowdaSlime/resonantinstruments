@@ -2,6 +2,7 @@ package net.chowdaslime.resonantinstruments.item;
 
 import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.data.StoredPotionsData;
+import net.chowdaslime.resonantinstruments.sound.ModSounds;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -43,7 +44,7 @@ public class HarmonicOfAlchemyItem extends Item {
 
         applyPotions(data, player);
         player.getCooldowns().addCooldown(this.getDefaultInstance(), COOLDOWN_TICKS);
-        level.playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0f, 1.2f);
+        level.playSound(null, player.blockPosition(), ModSounds.ALCHEMY.get(), SoundSource.PLAYERS, 0.4f, 1.2f);
 
         return InteractionResult.CONSUME;
     }
@@ -65,7 +66,7 @@ public class HarmonicOfAlchemyItem extends Item {
 
         applyPotions(data, target);
         player.getCooldowns().addCooldown(this.getDefaultInstance(), COOLDOWN_TICKS);
-        target.level().playSound(null, target.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0f, 1.2f);
+        target.level().playSound(null, player.blockPosition(), ModSounds.ALCHEMY.get(), SoundSource.PLAYERS, 0.4f, 1.2f);
 
         return InteractionResult.CONSUME;
     }

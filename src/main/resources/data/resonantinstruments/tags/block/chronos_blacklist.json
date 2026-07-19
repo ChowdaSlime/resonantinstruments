@@ -1,20 +1,11 @@
 {
   "replace": false,
   "values": [
-    "minecraft:hopper",
-    "minecraft:enchanting_table",
     "minecraft:beacon",
     "minecraft:conduit",
-    "minecraft:daylight_detector",
-    "minecraft:bell",
-    "minecraft:jukebox",
-    "minecraft:sculk_sensor",
-    "minecraft:sculk_shrieker",
-    "minecraft:sculk_catalyst",
-    "minecraft:moving_piston",
+    "minecraft:enchanting_table",
     "minecraft:end_gateway",
     "minecraft:end_portal",
-    "minecraft:shulker_box",
-    "minecraft:chest"
+    "minecraft:jukebox"
   ]
 }

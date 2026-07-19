@@ -2,6 +2,7 @@ package net.chowdaslime.resonantinstruments.item;
 
 import net.chowdaslime.resonantinstruments.ResonantInstrumentsConfig;
 import net.chowdaslime.resonantinstruments.entity.ChronosAcceleratorEntity;
+import net.chowdaslime.resonantinstruments.sound.ModSounds;
 import net.chowdaslime.resonantinstruments.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -32,6 +33,9 @@ public class HarmonicOfChronosItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide()) {
+            level.playSound(null, player.blockPosition(), ModSounds.CHRONOS_CHARGE.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+        }
         player.startUsingItem(hand);
         return InteractionResult.CONSUME;
     }
@@ -112,7 +116,7 @@ public class HarmonicOfChronosItem extends Item {
         }
 
         float pitch = 1.0F + ((float) nextMultiplier / maxMultiplier);
-        level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 1.0F, pitch);
+        level.playSound(null, pos, ModSounds.CHRONOS_FIRE.get(), SoundSource.PLAYERS, 1.0F, pitch);
 
         return true;
     }

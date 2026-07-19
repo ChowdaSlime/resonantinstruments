@@ -1,6 +1,7 @@
 package net.chowdaslime.resonantinstruments.item;
 
 import net.chowdaslime.resonantinstruments.ResonantInstrumentsConfig;
+import net.chowdaslime.resonantinstruments.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -34,35 +35,38 @@ public class HarmonicOfVitalityItem extends Item {
         int radius = ResonantInstrumentsConfig.VITALITY_AREA_RADIUS.get();
 
         boolean affectedAny = false;
+        boolean shiftHeld = player.isShiftKeyDown();
 
-        for (BlockPos pos : BlockPos.betweenClosed(
-                center.offset(-radius, -1, -radius),
-                center.offset(radius, 1, radius))) {
-            BlockState state = level.getBlockState(pos);
-            if (state.getBlock() instanceof BonemealableBlock bonemealable
-                    && bonemealable.isValidBonemealTarget(serverLevel, pos, state)
-                    && bonemealable.isBonemealSuccess(serverLevel, level.getRandom(), pos, state)) {
-                if (level.getRandom().nextFloat() < 0.45F) {
-                    bonemealable.performBonemeal(serverLevel, level.getRandom(), pos, state);
+        if (shiftHeld) {
+            for (BlockPos pos : BlockPos.betweenClosed(
+                    center.offset(-radius, -1, -radius),
+                    center.offset(radius, 1, radius))) {
+                BlockState state = level.getBlockState(pos);
+                if (state.getBlock() instanceof BonemealableBlock bonemealable
+                        && bonemealable.isValidBonemealTarget(serverLevel, pos, state)
+                        && bonemealable.isBonemealSuccess(serverLevel, level.getRandom(), pos, state)) {
+                    if (level.getRandom().nextFloat() < 0.45F) {
+                        bonemealable.performBonemeal(serverLevel, level.getRandom(), pos, state);
+                        affectedAny = true;
+                    }
+                }
+            }
+        } else {
+            AABB searchBox = new AABB(center).inflate(radius, radius, radius);
+            List<Animal> animals = level.getEntitiesOfClass(Animal.class, searchBox);
+            for (Animal animal : animals) {
+                if (animal.isBaby()) {
+                    animal.ageUp(ResonantInstrumentsConfig.VITALITY_GROWTH_ACCELERATION_SECONDS.get(), true);
+                    affectedAny = true;
+                } else if (!animal.isInLove() && animal.getAge() == 0) {
+                    animal.setInLove(null);
                     affectedAny = true;
                 }
             }
         }
 
-        AABB searchBox = new AABB(center).inflate(radius, radius, radius);
-        List<Animal> animals = level.getEntitiesOfClass(Animal.class, searchBox);
-        for (Animal animal : animals) {
-            if (animal.isBaby()) {
-                animal.ageUp(ResonantInstrumentsConfig.VITALITY_GROWTH_ACCELERATION_SECONDS.get(), true);
-                affectedAny = true;
-            } else if (!animal.isInLove() && animal.getAge() == 0) {
-                animal.setInLove(null);
-                affectedAny = true;
-            }
-        }
-
         if (affectedAny) {
-            level.playSound(null, center, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0F, 1.2F);
+            level.playSound(null, center, ModSounds.VITALITY.get(), SoundSource.PLAYERS, 2.5F, 1.2F);
         }
 
         player.getCooldowns().addCooldown(player.getItemInHand(hand), 10);

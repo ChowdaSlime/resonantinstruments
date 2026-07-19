@@ -5,6 +5,7 @@ import net.chowdaslime.resonantinstruments.block.entity.ModBlockEntities;
 import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.item.ModEntities;
 import net.chowdaslime.resonantinstruments.item.ModItems;
+import net.chowdaslime.resonantinstruments.sound.ModSounds;
 import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 
@@ -34,7 +35,7 @@ public class ResonantInstruments {
         ModCreativeModeTabs.register(modEventBus);
         ModDataComponents.register(modEventBus);
         ModEntities.register(modEventBus);
-
+        ModSounds.register(modEventBus);
 
 
 

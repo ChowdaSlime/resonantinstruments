@@ -13,7 +13,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(bold)Use$()$(br)Right-click around crops to release a wave of resonance around you. Nearby growable plants receive random growth ticks, and nearby animals may be enticed to breed, if used directly on baby animals, it will advance their growth timer, without needing to be fed first.$(br2)The effect has a short cooldown between uses."
+      "text": "$(bold)Use$()$(br)Shift-Right-click around crops to release a wave of resonance around you. This will apply random growth ticks to nearby crops, enabling them to grow faster. Right-clicking near animals will entice them to breed, if used directly on baby animals, it will advance their growth timer, without needing to be fed first.$(br2)The effect has a short cooldown between uses."
     }
   ]
 }

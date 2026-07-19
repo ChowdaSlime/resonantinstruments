@@ -1,0 +1,70 @@
+{
+  "alchemy": {
+    "category": "player",
+    "sounds": [ { "name": "resonantinstruments:alchemy" } ],
+    "subtitle": "subtitles.resonantinstruments.alchemy"
+  },
+  "chronos_charge": {
+    "category": "player",
+    "sounds": [ {
+      "name": "resonantinstruments:chronos_charge"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.chronos_charge"
+  },
+  "chronos_fire": {
+    "category": "player",
+    "sounds": [ {
+      "name": "resonantinstruments:chronos_fire"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.chronos_fire"
+  },
+  "divination_search": {
+    "category": "player",
+    "sounds": [ {
+      "name": "resonantinstruments:divination_search"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.divination_search"
+  },
+  "divination_tune": {
+    "category": "player",
+    "sounds": [ {
+      "name": "resonantinstruments:divination_tune"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.divination_tune"
+  },
+  "resonance": {
+    "category": "player",
+    "sounds": [ {
+      "name": "resonantinstruments:resonance"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.resonance"
+  },
+  "vitality": {
+    "category": "player",
+    "sounds": [ {
+      "name": "resonantinstruments:vitality"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.vitality"
+  },
+  "ritual_start": {
+    "category": "block",
+    "sounds": [ {
+      "name": "resonantinstruments:ritual_start"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.ritual_start"
+  },
+  "ritual": {
+    "category": "block",
+    "sounds": [ {
+      "name": "resonantinstruments:ritual"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.ritual"
+  },
+  "ritual_completion": {
+    "category": "block",
+    "sounds": [ {
+      "name": "resonantinstruments:ritual_completion"
+    } ],
+    "subtitle": "subtitles.resonantinstruments.ritual_completion"
+  }
+}

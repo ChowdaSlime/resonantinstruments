@@ -65,7 +65,7 @@ public class HarmonicNodeRenderer implements BlockEntityRenderer<HarmonicNodeBlo
 
         poseStack.pushPose();
         try {
-            poseStack.translate(0.5D, 0.95D, 0.5D);
+            poseStack.translate(0.5D, 1.25D, 0.5D);
 
             float time = state.gameTime + state.partialTick;
             float bobOffset = (float) Math.sin(time * 0.05f) * 0.05f;

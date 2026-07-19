@@ -1,8 +1,10 @@
 package net.chowdaslime.resonantinstruments.event;
 
+import net.chowdaslime.resonantinstruments.ResonantInstruments;
 import net.chowdaslime.resonantinstruments.ResonantInstrumentsConfig;
 import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.item.HarmonicOfDivinationItem;
+import net.chowdaslime.resonantinstruments.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,7 +23,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
-@EventBusSubscriber(modid = "resonantinstruments")
+@EventBusSubscriber(modid = ResonantInstruments.MODID)
 public class DivinationStrikeEvents {
 
     @SubscribeEvent
@@ -60,7 +62,7 @@ public class DivinationStrikeEvents {
 
         player.getCooldowns().addCooldown(stack, ResonantInstrumentsConfig.DIVINATION_COOLDOWN_TICKS.get());
 
-        level.playSound(null, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT,
+        level.playSound(null, player.blockPosition(), ModSounds.DIVINATION_SEARCH.get(),
                 SoundSource.PLAYERS, 1.0F, 1.0F);
 
         int radius = ResonantInstrumentsConfig.DIVINATION_SEARCH_RADIUS.get();

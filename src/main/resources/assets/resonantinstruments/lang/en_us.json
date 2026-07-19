@@ -11,6 +11,16 @@
   "block.resonantinstruments.resonance_chamber": "Resonance Chamber",
   "block.resonantinstruments.harmonic_node": "Harmonic Node",
 
+  "subtitles.resonantinstruments.alchemy": "Harmonic of Alchemy resonates",
+  "subtitles.resonantinstruments.chronos_charge": "Harmonic of Chronos charges",
+  "subtitles.resonantinstruments.chronos_fire": "Harmonic of Chronos fires",
+  "subtitles.resonantinstruments.divination_tune": "Harmonic of Divination tunes",
+  "subtitles.resonantinstruments.divination_search": "Harmonic of Divination searches",
+  "subtitles.resonantinstruments.resonance": "Harmonic of Resonance hums",
+  "subtitles.resonantinstruments.vitality": "Harmonic of Vitality blooms",
+  "subtitles.resonantinstruments.ritual_start": "Ritual egins",
+  "subtitles.resonantinstruments.ritual": "Ritual commences",
+  "subtitles.resonantinstruments.ritual_completion": "Ritual completes",
 
   "creativetab.resonant_instruments_tab": "Resonant Instruments"
 }

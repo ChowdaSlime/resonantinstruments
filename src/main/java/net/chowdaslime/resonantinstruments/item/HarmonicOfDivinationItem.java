@@ -1,6 +1,7 @@
 package net.chowdaslime.resonantinstruments.item;
 
 import net.chowdaslime.resonantinstruments.data.ModDataComponents;
+import net.chowdaslime.resonantinstruments.sound.ModSounds;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -39,7 +40,7 @@ public class HarmonicOfDivinationItem extends Item {
 
         player.sendOverlayMessage(
                 Component.literal("Tuned to ").append(target.getName()));
-        level.playSound(null, context.getClickedPos(), SoundEvents.AMETHYST_BLOCK_RESONATE,
+        level.playSound(null, context.getClickedPos(), ModSounds.DIVINATION_TUNE.get(),
                 SoundSource.PLAYERS, 1.0F, 1.4F);
 
         return InteractionResult.CONSUME;

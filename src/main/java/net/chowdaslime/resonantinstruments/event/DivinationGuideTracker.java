@@ -1,5 +1,6 @@
 package net.chowdaslime.resonantinstruments.event;
 
+import net.chowdaslime.resonantinstruments.ResonantInstruments;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@EventBusSubscriber(modid = "resonantinstruments")
+@EventBusSubscriber(modid = ResonantInstruments.MODID)
 public class DivinationGuideTracker {
 
     private static final DustParticleOptions GUIDE_PARTICLE =

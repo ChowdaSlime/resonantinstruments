@@ -29,7 +29,7 @@ import java.util.List;
 public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceChamberBlockEntity, ResonanceChamberRenderer.ResonanceChamberRenderState> {
 
     private static final float MAX_LIFT = 1.1f;
-    private static final float SPIN_BASE_SPEED = 8.0f;
+    private static final float SPIN_BASE_SPEED = 2.0f;
     private static final float PEAK_SPIN_SPEED = 24.0f;
     private static final float LIFT_RISE_DURATION = 40f;
     private static final float RING_PIVOT_Y = 24.0F / 16.0F;
@@ -111,7 +111,7 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
 
         long gameTime = blockEntity.getLevel() != null ? blockEntity.getLevel().getGameTime() : 0L;
         state.phase = blockEntity.getPhase();
-        state.elapsed = (gameTime - blockEntity.getPhaseStartTime()) + partialTick;
+        state.elapsed = blockEntity.getPhaseElapsedTicks() + partialTick;
         state.activeNodes.clear();
         state.activeNodes.addAll(blockEntity.getActiveNodes());
         state.chamberPos = blockEntity.getBlockPos();
@@ -351,7 +351,7 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
         try {
             poseStack.translate(0.5D, 1.35D + state.lift, 0.5D);
 
-            float bobOffset = (float) Math.sin(state.spinElapsed * 0.025f) * 0.04f;
+            float bobOffset = (float) Math.sin(state.spinElapsed * 0.025f * (0.05f / 0.025f)) * 0.05f;
             poseStack.translate(0.0, bobOffset, 0.0);
 
             float rotationDegrees = state.spinElapsed % 360f;

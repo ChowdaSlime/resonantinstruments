@@ -2,18 +2,14 @@ package net.chowdaslime.resonantinstruments.item;
 
 import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.item.resonance.HoningTier;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -26,11 +22,11 @@ public class HarmonicOfResonanceItem extends Item {
         super(properties);
     }
 
-    private int getMinedCount(ItemStack stack) {
+    public static int getMinedCount(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.BLOCKS_MINED.get(), 0);
     }
 
-    private HoningTier getHoningTier(ItemStack stack) {
+    public static HoningTier getHoningTier(ItemStack stack) {
         return HoningTier.fromMinedCount(getMinedCount(stack));
     }
 
@@ -82,14 +78,5 @@ public class HarmonicOfResonanceItem extends Item {
             return getHoningTier(stack).material().speed();
         }
         return super.getDestroySpeed(stack, state);
-    }
-
-    @Override
-    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miner) {
-        if (!level.isClientSide()) {
-            stack.set(ModDataComponents.BLOCKS_MINED.get(), getMinedCount(stack) + 1);
-            stack.hurtAndBreak(1, miner, EquipmentSlot.MAINHAND);
-        }
-        return true;
     }
 }

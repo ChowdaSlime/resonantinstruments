@@ -20,7 +20,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class HarmonicNodeBlock extends Block implements EntityBlock {
@@ -28,7 +30,17 @@ public class HarmonicNodeBlock extends Block implements EntityBlock {
     public static final EnumProperty<Direction> FACING =
             BlockStateProperties.HORIZONTAL_FACING;
 
-    private static final VoxelShape SHAPE = Block.box(4.5, 0.0, 4.5, 11.5, 9.75, 11.5);
+    private static final VoxelShape SHAPE = buildShape();
+
+    private static VoxelShape buildShape() {
+        VoxelShape shape = Block.box(4, 0, 4, 12, 2, 12);
+        shape = Shapes.join(shape, Block.box(4, 2, 4, 5, 16, 5), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(11, 2, 4, 12, 16, 5), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(4, 2, 11, 5, 16, 12), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(11, 2, 11, 12, 16, 12), BooleanOp.OR);
+        shape = Shapes.join(shape, Block.box(4, 14, 4, 12, 16, 12), BooleanOp.OR);
+        return shape;
+    }
 
     public HarmonicNodeBlock(BlockBehaviour.Properties properties) {
         super(properties);
