@@ -1,0 +1,23 @@
+{
+  "name": "Carving Knife",
+  "icon": "resonantinstruments:carving_knife",
+  "category": "resonantinstruments:basics",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(item)Carving Knife$()$(br2)A blade meant for shaping wood into vessels the infusing ritual. Has no uses outside of stripping and whittling logs."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Stripping$()$(br)Right-click any log or wood block to strip it, as an axe would."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Carving the Chamber$()$(br)Right-click a $(item)Stripped Spruce Log$() to carve it into a $(item)Resonance Chamber$(). This transformation only works on spruce."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Carving the Node$()$(br)Right-click a Resonance Chamber to carve it further into a $(item)Harmonic Node$(). This cannot be undone. $(br2)The knife has 128 uses before it breaks."
+    }
+  ]
+}

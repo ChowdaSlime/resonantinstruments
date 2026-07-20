@@ -42,5 +42,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('C', Items.STICK)
                 .unlockedBy("has_iron_ingot", has(Items.IRON_INGOT))
                 .save(output);
+
+        shaped(RecipeCategory.TOOLS, ModItems.CARVING_KNIFE.get())
+                .pattern("  A")
+                .pattern(" A ")
+                .pattern("B  ")
+                .define('A', Items.IRON_INGOT)
+                .define('B', Items.STICK)
+                .unlockedBy("has_iron_ingot", has(Items.IRON_INGOT))
+                .save(output);
     }
 }

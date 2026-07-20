@@ -35,9 +35,13 @@ public class ModItems {
             ITEMS.registerItem("harmonic_of_alchemy",
                     properties -> new HarmonicOfAlchemyItem(properties.stacksTo(1))
             );
-    public static final DeferredItem<Item> GUIDE_BOOK = ITEMS.registerItem("guide_book",
+    public static final DeferredItem<Item> GUIDE_BOOK =
+            ITEMS.registerItem("guide_book",
             properties -> new GuideBookItem(properties.stacksTo(1))
             );
+    public static final DeferredItem<CarvingKnifeItem> CARVING_KNIFE =
+            ITEMS.registerItem("carving_knife",
+                    properties -> new CarvingKnifeItem(properties.durability(128)));
 
 
     public static void register(IEventBus modEventBus) {

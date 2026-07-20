@@ -208,8 +208,6 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
             }
             default -> {}
         }
-
-        be.syncToClient();
     }
 
     private void completeRitual() {

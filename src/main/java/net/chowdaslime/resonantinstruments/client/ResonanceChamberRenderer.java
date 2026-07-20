@@ -41,9 +41,9 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
     private static final float RUNE_INNER_SPEED_MULT = 0.5f;
     private static final float RUNE_OUTER_SPEED_MULT = -0.25f;
     private static final float RUNE_CIRCLE_RADIUS = 3.35f;
-    private static final float RUNE_PULSE_SPEED = 0.12f;
-    private static final float RUNE_PULSE_MIN_BRIGHTNESS = 0.45f;
+    private static final float RUNE_PULSE_MIN_BRIGHTNESS = 0.75f;
     private static final float RUNE_PULSE_MAX_BRIGHTNESS = 1.0f;
+    private static final float RUNE_PULSE_SPEED = 0.06f;
     private static final float LIGHTNING_HALF_WIDTH = 0.5f;
     private static final float LIGHTNING_CONSUME_WINDOW = CIRCLE_APPEAR_TIME;
 
@@ -111,7 +111,8 @@ public class ResonanceChamberRenderer implements BlockEntityRenderer<ResonanceCh
 
         long gameTime = blockEntity.getLevel() != null ? blockEntity.getLevel().getGameTime() : 0L;
         state.phase = blockEntity.getPhase();
-        state.elapsed = blockEntity.getPhaseElapsedTicks() + partialTick;
+        long clientGameTime = blockEntity.getLevel() != null ? blockEntity.getLevel().getGameTime() : 0L;
+        state.elapsed = (clientGameTime - blockEntity.getPhaseStartTime()) + partialTick;
         state.activeNodes.clear();
         state.activeNodes.addAll(blockEntity.getActiveNodes());
         state.chamberPos = blockEntity.getBlockPos();

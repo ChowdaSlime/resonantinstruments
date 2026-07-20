@@ -28,6 +28,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.RESONANCE_CHAMBER.get());
                         output.accept(ModBlocks.HARMONIC_NODE.get());
                         output.accept(ModItems.GUIDE_BOOK.get());
+                        output.accept(ModItems.CARVING_KNIFE.get());
                     })
                     .build());
 

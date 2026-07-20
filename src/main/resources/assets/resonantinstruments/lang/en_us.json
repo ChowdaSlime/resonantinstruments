@@ -5,6 +5,7 @@
   "item.resonantinstruments.harmonic_of_chronos": "Harmonic of Chronos",
   "item.resonantinstruments.harmonic_of_divination": "Harmonic of Divination",
   "item.resonantinstruments.harmonic_of_alchemy": "Harmonic of Alchemy",
+  "item.resonantinstruments.carving_knife": "Carving Knife",
 
   "item.resonantinstruments.guide_book": "Resonant Codex",
 
@@ -18,7 +19,7 @@
   "subtitles.resonantinstruments.divination_search": "Harmonic of Divination searches",
   "subtitles.resonantinstruments.resonance": "Harmonic of Resonance hums",
   "subtitles.resonantinstruments.vitality": "Harmonic of Vitality blooms",
-  "subtitles.resonantinstruments.ritual_start": "Ritual egins",
+  "subtitles.resonantinstruments.ritual_start": "Ritual begins",
   "subtitles.resonantinstruments.ritual": "Ritual commences",
   "subtitles.resonantinstruments.ritual_completion": "Ritual completes",
 
