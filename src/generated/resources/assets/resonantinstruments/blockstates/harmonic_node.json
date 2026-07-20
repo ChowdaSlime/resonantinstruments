@@ -1,18 +1,33 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,lit=false": {
       "model": "resonantinstruments:block/harmonic_node",
       "y": 90
     },
-    "facing=north": {
+    "facing=east,lit=true": {
+      "model": "resonantinstruments:block/harmonic_node_on",
+      "y": 90
+    },
+    "facing=north,lit=false": {
       "model": "resonantinstruments:block/harmonic_node"
     },
-    "facing=south": {
+    "facing=north,lit=true": {
+      "model": "resonantinstruments:block/harmonic_node_on"
+    },
+    "facing=south,lit=false": {
       "model": "resonantinstruments:block/harmonic_node",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,lit=true": {
+      "model": "resonantinstruments:block/harmonic_node_on",
+      "y": 180
+    },
+    "facing=west,lit=false": {
       "model": "resonantinstruments:block/harmonic_node",
+      "y": 270
+    },
+    "facing=west,lit=true": {
+      "model": "resonantinstruments:block/harmonic_node_on",
       "y": 270
     }
   }

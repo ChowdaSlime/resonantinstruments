@@ -11,6 +11,9 @@
 
   "block.resonantinstruments.resonance_chamber": "Resonance Chamber",
   "block.resonantinstruments.harmonic_node": "Harmonic Node",
+  "block.resonantinstruments.marble": "Marble",
+  "block.resonantinstruments.runed_marble": "Runed Marble",
+  "block.resonantinstruments.engraved_marble": "Engraved Marble",
 
   "subtitles.resonantinstruments.alchemy": "Harmonic of Alchemy resonates",
   "subtitles.resonantinstruments.chronos_charge": "Harmonic of Chronos charges",

@@ -19,6 +19,9 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     protected void generate() {
         this.dropSelf(ModBlocks.RESONANCE_CHAMBER.get());
         this.dropSelf(ModBlocks.HARMONIC_NODE.get());
+        this.dropSelf(ModBlocks.MARBLE.get());
+        this.dropSelf(ModBlocks.RUNED_MARBLE.get());
+        this.dropSelf(ModBlocks.ENGRAVED_MARBLE.get());
     }
 
     @Override

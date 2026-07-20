@@ -6,6 +6,8 @@ import net.chowdaslime.resonantinstruments.sound.ModSounds;
 import net.chowdaslime.resonantinstruments.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -57,6 +59,12 @@ public class HarmonicOfChronosItem extends Item {
             return false;
         }
 
+        for (Player p : level.players()) {
+            if (p instanceof ServerPlayer sp && sp.distanceToSqr(player) < 1024) {
+                sp.connection.send(new ClientboundStopSoundPacket(ModSounds.CHRONOS_CHARGE.getId(), SoundSource.PLAYERS));
+            }
+        }
+
         int ticksCharged = this.getUseDuration(stack, livingEntity) - timeLeft;
 
         if (ticksCharged < 10) {
@@ -82,9 +90,20 @@ public class HarmonicOfChronosItem extends Item {
         }
 
         int secondsCharged = ticksCharged / 20;
-        int maxMultiplier = ResonantInstrumentsConfig.CHRONOS_MAX_MULTIPLIER.get();
 
-        int nextMultiplier = (int) Math.pow(2, secondsCharged + 1);
+        int tier;
+        if (secondsCharged >= 4) {
+            tier = 3;
+        } else if (secondsCharged >= 2) {
+            tier = 2;
+        } else if (secondsCharged >= 1) {
+            tier = 1;
+        } else {
+            tier = 0;
+        }
+
+        int nextMultiplier = (int) Math.pow(2, tier + 1);
+        int maxMultiplier = ResonantInstrumentsConfig.CHRONOS_MAX_MULTIPLIER.get();
         nextMultiplier = Math.min(nextMultiplier, maxMultiplier);
 
         AABB searchBox = new AABB(pos);

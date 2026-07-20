@@ -1,5 +1,6 @@
 package net.chowdaslime.resonantinstruments.block.entity;
 
+import net.chowdaslime.resonantinstruments.block.ModBlocks;
 import net.chowdaslime.resonantinstruments.data.ModDataComponents;
 import net.chowdaslime.resonantinstruments.data.StoredPotionsData;
 import net.chowdaslime.resonantinstruments.item.ModItems;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -50,6 +52,62 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
             new BlockPos(0, 0, 3),
             new BlockPos(0, 0, -3)
     };
+
+    private static final String[] FLOOR_PATTERN = {
+            "   MMM   ",
+            "  MMRMM  ",
+            " MMMMMMM ",
+            "MMMMMMMMM",
+            "MRMMEMMRM",
+            "MMMMMMMMM",
+            " MMMMMMM ",
+            "  MMRMM  ",
+            "   MMM   "
+    };
+
+    private static final int FLOOR_CENTER_ROW = 4;
+    private static final int FLOOR_CENTER_COL = 4;
+
+    private boolean isMarbleFamily(BlockState state) {
+        return state.is(ModBlocks.MARBLE.get())
+                || state.is(ModBlocks.RUNED_MARBLE.get())
+                || state.is(ModBlocks.ENGRAVED_MARBLE.get());
+    }
+
+    private boolean isMultiblockValid() {
+        if (level == null) return false;
+        BlockPos floorY = worldPosition.below();
+
+        for (int row = 0; row < FLOOR_PATTERN.length; row++) {
+            String line = FLOOR_PATTERN[row];
+            for (int col = 0; col < line.length(); col++) {
+                char ch = line.charAt(col);
+                if (ch == ' ') continue;
+
+                int dx = col - FLOOR_CENTER_COL;
+                int dz = row - FLOOR_CENTER_ROW;
+                BlockPos checkPos = floorY.offset(dx, 0, dz);
+                BlockState state = level.getBlockState(checkPos);
+
+                switch (ch) {
+                    case 'E' -> {
+                        if (!state.is(ModBlocks.ENGRAVED_MARBLE.get()))
+                            return false;
+                    }
+                    case 'R' -> {
+                        if (!state.is(ModBlocks.RUNED_MARBLE.get()))
+                            return false;
+                    }
+                    case 'M' -> {
+                        if (!isMarbleFamily(state))
+                            return false;
+                    }
+                    default -> {}
+                }
+            }
+        }
+        return true;
+    }
 
     public ResonanceChamberBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.RESONANCE_CHAMBER_BLOCK_ENTITY.get(), pos, state);
@@ -88,7 +146,8 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
 
     public boolean tryInsertFork(ItemStack stack) {
         if (hasItem()) return false;
-        if (!stack.is(ModItems.UNATTUNED_FORK.get())) return false;
+        if (!stack.is(ModItems.UNATTUNED_FORK.get()))
+            return false;
 
         storedItem = stack.copyWithCount(1);
         setChanged();
@@ -106,7 +165,8 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
 
     private List<HarmonicNodeBlockEntity> findNodes() {
         List<HarmonicNodeBlockEntity> nodes = new ArrayList<>();
-        if (level == null) return nodes;
+        if (level == null)
+            return nodes;
 
         for (BlockPos offset : NODE_OFFSETS) {
             BlockPos nodePos = worldPosition.offset(offset);
@@ -122,17 +182,23 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
     }
 
     public boolean tryStartRitual() {
-        if (level == null || level.isClientSide()) return false;
-        if (phase != Phase.IDLE) return false;
-        if (!hasItem()) return false;
-        if (!storedItem.is(ModItems.UNATTUNED_FORK.get())) return false;
+        if (level == null || level.isClientSide())
+            return false;
+        if (phase != Phase.IDLE)
+            return false;
+        if (!hasItem())
+            return false;
+        if (!storedItem.is(ModItems.UNATTUNED_FORK.get()))
+            return false;
+        if (!isMultiblockValid())
+            return false;
 
         List<HarmonicNodeBlockEntity> nodes = findNodes();
         List<PotionContents> potions = new ArrayList<>();
         this.activeNodes.clear();
 
         for (HarmonicNodeBlockEntity node : nodes) {
-            if (node.hasPotion()) {
+            if (node.hasPotion() && level.getBlockState(node.getBlockPos().below()).is(ModBlocks.RUNED_MARBLE.get())) {
                 ItemStack potionStack = node.getStoredPotion();
                 PotionContents contents = potionStack.get(DataComponents.POTION_CONTENTS);
                 if (contents != null) {
@@ -142,7 +208,8 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
             }
         }
 
-        if (potions.isEmpty()) return false;
+        if (potions.isEmpty())
+            return false;
 
         this.pendingPotions = potions;
         setPhase(Phase.GATHER);
@@ -153,16 +220,37 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
     }
 
     private void setPhase(Phase newPhase) {
+        boolean isIdle = (newPhase == Phase.IDLE);
+
         this.phase = newPhase;
         this.phaseStartTime = level != null ? level.getGameTime() : 0L;
         this.phaseElapsedTicks = 0;
         this.ritualVisualSoundPlayed = false;
+
         setChanged();
         syncToClient();
+
+        if (level != null && !level.isClientSide()) {
+            BlockState currentState = getBlockState();
+            if (currentState.hasProperty(BlockStateProperties.LIT)) {
+                level.setBlockAndUpdate(worldPosition, currentState.setValue(BlockStateProperties.LIT, !isIdle));
+            }
+
+            for (BlockPos offset : NODE_OFFSETS) {
+                BlockPos nodePos = worldPosition.offset(offset);
+                BlockState nodeState = level.getBlockState(nodePos);
+
+                if (nodeState.is(ModBlocks.HARMONIC_NODE.get()) && nodeState.hasProperty(BlockStateProperties.LIT)) {
+                    boolean nodeActive = !isIdle && this.activeNodes.contains(nodePos);
+                    level.setBlockAndUpdate(nodePos, nodeState.setValue(BlockStateProperties.LIT, nodeActive));
+                }
+            }
+        }
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, ResonanceChamberBlockEntity be) {
-        if (be.phase == Phase.IDLE) return;
+        if (be.phase == Phase.IDLE)
+            return;
 
         if ((be.phase == Phase.GATHER || be.phase == Phase.RITUAL) && be.pendingPotions == null) {
             be.setPhase(Phase.IDLE);
@@ -185,7 +273,6 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
                 }
                 if (elapsed >= RITUAL_DURATION) {
                     be.completeRitual();
-                    return;
                 }
             }
             case HOLD -> {
@@ -197,13 +284,11 @@ public class ResonanceChamberBlockEntity extends BlockEntity {
                     }
                     level.playSound(null, pos, ModSounds.RITUAL_COMPLETION.get(), SoundSource.BLOCKS, 0.2f, 1.0f);
                     be.setPhase(Phase.DESCEND);
-                    return;
                 }
             }
             case DESCEND -> {
                 if (elapsed >= DESCEND_DURATION) {
                     be.setPhase(Phase.IDLE);
-                    return;
                 }
             }
             default -> {}

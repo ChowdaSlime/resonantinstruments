@@ -1,6 +1,9 @@
 {
   "values": [
     "resonantinstruments:resonance_chamber",
-    "resonantinstruments:harmonic_node"
+    "resonantinstruments:harmonic_node",
+    "resonantinstruments:marble",
+    "resonantinstruments:runed_marble",
+    "resonantinstruments:engraved_marble"
   ]
 }

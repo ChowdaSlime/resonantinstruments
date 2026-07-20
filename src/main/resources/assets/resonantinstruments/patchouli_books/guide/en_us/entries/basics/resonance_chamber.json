@@ -13,36 +13,34 @@
       "multiblock": {
         "pattern": [
           [
-            "       ",
-            "       ",
-            "       ",
-            "       ",
-            "       ",
-            "       ",
-            "       "
+            "         ",
+            "    N    ",
+            "         ",
+            "         ",
+            " N  C  N ",
+            "         ",
+            "         ",
+            "    N    ",
+            "         "
           ],
           [
-            "   H   ",
-            "       ",
-            "       ",
-            "H  0  H",
-            "       ",
-            "       ",
-            "   H   "
-          ],
-          [
-            "       ",
-            "       ",
-            "       ",
-            "       ",
-            "       ",
-            "       ",
-            "       "
+            "   MMM   ",
+            "  MMRMM  ",
+            " MMMMMMM ",
+            "MMMMMMMMM",
+            "MRMM0MMRM",
+            "MMMMMMMMM",
+            " MMMMMMM ",
+            "  MMRMM  ",
+            "   MMM   "
           ]
         ],
         "mapping": {
-          "H": "resonantinstruments:harmonic_node",
-          "0": "resonantinstruments:resonance_chamber"
+          "N": "resonantinstruments:harmonic_node",
+          "C": "resonantinstruments:resonance_chamber",
+          "M": "resonantinstruments:marble",
+          "R": "resonantinstruments:runed_marble",
+          "0": "resonantinstruments:engraved_marble"
         },
         "symmetrical": true
       }

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "resonantinstruments:block/marble",
+    "side": "resonantinstruments:block/engraved_marble"
+  }
+}

@@ -29,6 +29,9 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.HARMONIC_NODE.get());
                         output.accept(ModItems.GUIDE_BOOK.get());
                         output.accept(ModItems.CARVING_KNIFE.get());
+                        output.accept(ModBlocks.MARBLE.get());
+                        output.accept(ModBlocks.RUNED_MARBLE.get());
+                        output.accept(ModBlocks.ENGRAVED_MARBLE.get());
                     })
                     .build());
 

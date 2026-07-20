@@ -10,8 +10,10 @@ import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -30,33 +32,67 @@ public class ModModelProvider extends ModelProvider {
         itemModels.generateFlatItem(ModItems.HARMONIC_OF_ALCHEMY.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.CARVING_KNIFE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(ModItems.GUIDE_BOOK.get(), ModelTemplates.FLAT_ITEM);
+        blockModels.createTrivialCube(ModBlocks.MARBLE.get());
 
         Block chamber = ModBlocks.RESONANCE_CHAMBER.get();
         var chamberModelLoc = ModelLocationUtils.getModelLocation(chamber);
+        Identifier chamberOnModelLoc = Identifier.fromNamespaceAndPath(ResonantInstruments.MODID, "block/resonance_chamber_on");
 
         blockModels.blockStateOutput.accept(
                 MultiVariantGenerator.dispatch(chamber, BlockModelGenerators.plainVariant(chamberModelLoc))
+                        .with(PropertyDispatch.modify(BlockStateProperties.LIT)
+                                .select(true, v -> v.withModel(chamberOnModelLoc))
+                                .select(false, v -> v))
                         .with(PropertyDispatch.modify(BlockStateProperties.HORIZONTAL_FACING)
                                 .select(Direction.NORTH, v -> v)
                                 .select(Direction.EAST,  BlockModelGenerators.Y_ROT_90)
                                 .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180)
                                 .select(Direction.WEST,  BlockModelGenerators.Y_ROT_270))
         );
-
         blockModels.registerSimpleItemModel(chamber.asItem(), chamberModelLoc);
 
         Block node = ModBlocks.HARMONIC_NODE.get();
         var nodeModelLoc = ModelLocationUtils.getModelLocation(node);
+        Identifier nodeOnModelLoc = Identifier.fromNamespaceAndPath(ResonantInstruments.MODID, "block/harmonic_node_on");
 
         blockModels.blockStateOutput.accept(
                 MultiVariantGenerator.dispatch(node, BlockModelGenerators.plainVariant(nodeModelLoc))
+                        .with(PropertyDispatch.modify(BlockStateProperties.LIT)
+                                .select(true, v -> v.withModel(nodeOnModelLoc))
+                                .select(false, v -> v))
                         .with(PropertyDispatch.modify(BlockStateProperties.HORIZONTAL_FACING)
                                 .select(Direction.NORTH, v -> v)
                                 .select(Direction.EAST,  BlockModelGenerators.Y_ROT_90)
                                 .select(Direction.SOUTH, BlockModelGenerators.Y_ROT_180)
                                 .select(Direction.WEST,  BlockModelGenerators.Y_ROT_270))
         );
-
         blockModels.registerSimpleItemModel(node.asItem(), nodeModelLoc);
+
+        Block marble = ModBlocks.MARBLE.get();
+        var marbleTexture = TextureMapping.getBlockTexture(marble);
+
+        Block runedMarble = ModBlocks.RUNED_MARBLE.get();
+        var runedMarbleModel = ModelTemplates.CUBE_COLUMN.create(
+                runedMarble,
+                TextureMapping.column(TextureMapping.getBlockTexture(runedMarble), marbleTexture),
+                blockModels.modelOutput);
+
+        blockModels.blockStateOutput.accept(
+                BlockModelGenerators.createSimpleBlock(runedMarble, BlockModelGenerators.plainVariant(runedMarbleModel))
+        );
+
+        blockModels.registerSimpleItemModel(runedMarble, runedMarbleModel);
+
+        Block engravedMarble = ModBlocks.ENGRAVED_MARBLE.get();
+        var engravedMarbleModel = ModelTemplates.CUBE_COLUMN.create(
+                engravedMarble,
+                TextureMapping.column(TextureMapping.getBlockTexture(engravedMarble), marbleTexture),
+                blockModels.modelOutput);
+
+        blockModels.blockStateOutput.accept(
+                BlockModelGenerators.createSimpleBlock(engravedMarble, BlockModelGenerators.plainVariant(engravedMarbleModel))
+        );
+
+        blockModels.registerSimpleItemModel(engravedMarble, engravedMarbleModel);
     }
 }
