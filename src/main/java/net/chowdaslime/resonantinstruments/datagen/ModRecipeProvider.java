@@ -1,5 +1,6 @@
 package net.chowdaslime.resonantinstruments.datagen;
 
+import net.chowdaslime.resonantinstruments.block.ModBlocks;
 import net.chowdaslime.resonantinstruments.item.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -50,6 +51,28 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('A', Items.IRON_INGOT)
                 .define('B', Items.STICK)
                 .unlockedBy("has_iron_ingot", has(Items.IRON_INGOT))
+                .save(output);
+
+        shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.MARBLE.get())
+                .requires(Items.STONE)
+                .requires(Items.QUARTZ)
+                .unlockedBy("has_stone", has(Items.STONE))
+                .save(output);
+
+        shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.RUNED_MARBLE.get())
+                .pattern("ABA")
+                .define('A', Items.AMETHYST_SHARD)
+                .define('B', ModBlocks.MARBLE.get())
+                .unlockedBy("has_marble", has(ModBlocks.MARBLE.get()))
+                .save(output);
+
+        shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.ENGRAVED_MARBLE.get())
+                .pattern(" A ")
+                .pattern("ABA")
+                .pattern(" A ")
+                .define('A', Items.AMETHYST_SHARD)
+                .define('B', ModBlocks.MARBLE.get())
+                .unlockedBy("has_marble", has(ModBlocks.MARBLE.get()))
                 .save(output);
     }
 }

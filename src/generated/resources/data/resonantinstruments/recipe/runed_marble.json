@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "B": "resonantinstruments:marble"
+  },
+  "pattern": [
+    "ABA"
+  ],
+  "result": {
+    "id": "resonantinstruments:runed_marble"
+  }
+}

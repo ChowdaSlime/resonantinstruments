@@ -26,5 +26,21 @@
   "subtitles.resonantinstruments.ritual": "Ritual commences",
   "subtitles.resonantinstruments.ritual_completion": "Ritual completes",
 
+  "jei.resonantinstruments.category.attunement_info": "Resonant Instruments",
+
+  "jei.resonantinstruments.attunement.vitality.obtain": "Obtain by striking an Unattuned Fork against a fully grown crop or a breedable animal.",
+  "jei.resonantinstruments.attunement.vitality.desc": "Once tuned, the Harmonic of Vitality accelerates crop growth and triggers animal breeding without food when used nearby.",
+  "jei.resonantinstruments.attunement.resonance.obtain": "Obtain by striking an Unattuned Fork against bedrock at the absolute bottom of the world.",
+  "jei.resonantinstruments.attunement.resonance.desc": "Once tuned, the Harmonic of Resonance mines any block, gaining higher mining levels the more it is used.",
+  "jei.resonantinstruments.attunement.chronos.obtain": "Obtain by striking an Unattuned Fork against an Enchanting Table at exactly midnight.",
+  "jei.resonantinstruments.attunement.chronos.desc": "Once tuned, the Harmonic of Chronos will tick-accelerate blocks, enabling them to complete their processes faster.",
+  "jei.resonantinstruments.attunement.alchemy.obtain": "Obtain by infusing an Unattuned Fork with a potion at a Resonance Chamber.",
+  "jei.resonantinstruments.attunement.alchemy.desc": "Once tuned, the Harmonic of Alchemy becomes a reusable potion wand, applying its stored effect to the user or a target entity.",
+  "jei.resonantinstruments.attunement.divination.obtain": "Obtain by striking an Unattuned Fork against a Budding Amethyst.",
+  "jei.resonantinstruments.attunement.divination.desc": "Once tuned, the Harmonic of Divination points toward the nearest block matching whatever material it was last used on.",
+  "jei.resonantinstruments.carving.obtain": "Right-click any log to strip it. Right-click a Stripped Spruce Log with the Carving Knife to carve it into a Resonance Chamber, then right-click the Chamber again to carve it into a Harmonic Node.",
+  "jei.resonantinstruments.carving.desc": "The transformation only works on spruce, and each step cannot be undone. The Carving Knife has 128 uses before it breaks.",
+
+
   "creativetab.resonant_instruments_tab": "Resonant Instruments"
 }
