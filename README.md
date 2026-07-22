@@ -1,6 +1,6 @@
 # Resonant Instruments
 
-Sound, vibration, and frequency attuned into powerful tools that grant players the power to manipulate the worl around them. Each earned through a unique in-world formation rather than found in a crafting table.
+Sound, vibration, and frequency attuned into powerful tools that grant players the power to manipulate the world around them. Each earned through a unique in-world formation rather than found in a crafting table.
 
 ## Core Concept: Attunement
 
