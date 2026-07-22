@@ -13,12 +13,12 @@ There is no single "best" fork. Each Harmonic is obtained independently, and a p
 ### Harmonic of Vitality
 **Attunement:** Right-click an Unattuned Fork against a fully grown crop, or against an animal.
 
-Shift Right-click near crops to trigger accelerated growth in the surrounding area. Right-click near animals to trigger breeding or accelerate a baby animals' growth timer. A natural, ritual-based alternative to farming and breeding tools.
+Shift Right-click near crops to trigger accelerated growth in the surrounding area. Right-click near animals to trigger breeding or accelerate a baby animal's growth timer. A natural, ritual-based alternative to farming and breeding tools.
 
 ### Harmonic of Resonance
 **Attunement:** Strike an Unattuned Fork against bedrock at the very bottom of the world.
 
-Functions as a universal mining tool, capable of breaking any type of block. Rather than being end-game powerful from the moment it's obtained, the Harmonic of Resonance **hones in its frequency** the more it's used. Its effective mining level and damage scales up over time. As the level increases, new materials will be able to be harvested with it. The top-tier mining capability of the item is a higher level than netherite.
+Functions as a universal mining tool, capable of breaking any type of block. Rather than being end-game powerful from the moment it's obtained, the Harmonic of Resonance **hones in its frequency** the more it's used. Its effective mining level and damage scale up over time. As the level increases, new materials will be able to be harvested with it. The top-tier mining capability of the item is a higher level than netherite.
 
 ### Harmonic of Chronos
 **Attunement:** Strike an Unattuned Fork against an Enchanting Table at exactly midnight.
